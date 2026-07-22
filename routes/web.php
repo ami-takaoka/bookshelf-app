@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReviewLikeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy'])
         ->name('books.destroy');
 
+    // お気に入り
+    Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])
+        ->name('favorites.toggle');
+
+    Route::get('/favorites', [FavoriteController::class, 'index'])
+        ->name('favorites.index');
+
     // レビュー
     Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
         ->name('reviews.store');
@@ -51,6 +60,10 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
         ->name('reviews.destroy');
+
+    // レビューいいね
+    Route::post('/reviews/{review}/like', [ReviewLikeController::class, 'toggle'])
+        ->name('reviews.like');
 });
 
 Route::get('/books/{book}', [BookController::class, 'show'])
