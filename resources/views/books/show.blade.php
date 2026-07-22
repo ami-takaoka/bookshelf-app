@@ -103,7 +103,6 @@
                             <!-- レビュー投稿フォーム -->
                             <div class="mb-6 bg-gray-50 p-4 rounded-lg">
                                 <h3 class="font-semibold mb-3">レビューを投稿</h3>
-                                {{--
                                 <form action="{{ route('reviews.store', $book) }}" method="POST" novalidate>
                                     @csrf
                                     <div class="mb-4">
@@ -135,7 +134,6 @@
                                         </button>
                                     </div>
                                 </form>
-                                --}}
                             </div>
                         @else
                             <p class="mb-6 text-gray-600">
@@ -199,18 +197,14 @@
                                             <!-- 編集・削除ボタン -->
                                             <div class="flex items-center gap-2">
                                                 @can('update', $review)
-                                                    {{--
                                                     <a href="{{ route('reviews.edit', $review) }}" class="text-sm text-gray-500 hover:text-gray-700">編集</a>
-                                                    --}}
                                                 @endcan
                                                 @can('delete', $review)
-                                                    {{--
                                                     <form action="{{ route('reviews.destroy', $review) }}" method="POST" onsubmit="return confirm('本当に削除しますか？')" novalidate>
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="text-sm text-red-500 hover:text-red-700">削除</button>
                                                     </form>
-                                                    --}}
                                                 @endcan
                                             </div>
                                         </div>
