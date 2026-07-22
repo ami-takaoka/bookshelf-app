@@ -29,7 +29,6 @@
                                 <h1 class="text-2xl font-bold">{{ $book->title }}</h1>
 
                                 <!-- お気に入りボタン -->
-                                {{--
                                 @auth
                                     @if(Auth::user()->favoriteBooks->contains($book->id))
                                         <form action="{{ route('favorites.toggle', $book) }}" method="POST" novalidate>
@@ -57,7 +56,6 @@
                                         </svg>
                                     </a>
                                 @endauth
-                                --}}
                             </div>
 
                             <p class="text-gray-600 mb-2"><strong>著者:</strong> {{ $book->author }}</p>
@@ -161,7 +159,6 @@
 
                                         <div class="mt-3 flex items-center justify-between">
                                             <!-- いいねボタン -->
-                                            {{--
                                             @auth
                                                 @if(Auth::user()->likedReviews->contains($review->id))
                                                     <form action="{{ route('reviews.like', $review) }}" method="POST" class="inline" novalidate>
@@ -192,7 +189,6 @@
                                                     いいね ({{ $review->likedByUsers->count() }})
                                                 </a>
                                             @endauth
-                                            --}}
 
                                             <!-- 編集・削除ボタン -->
                                             <div class="flex items-center gap-2">
