@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
@@ -65,6 +66,9 @@ Route::middleware('auth')->group(function () {
     // レビューいいね
     Route::post('/reviews/{review}/like', [ReviewLikeController::class, 'toggle'])
         ->name('reviews.like');
+
+    // ジャンル
+    Route::resource('genres', GenreController::class);
 });
 
 Route::get('/books/{book}', [BookController::class, 'show'])
