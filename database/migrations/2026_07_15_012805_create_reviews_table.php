@@ -25,11 +25,6 @@ return new class extends Migration
             $table->text('comment');
 
             $table->timestamps();
-
-            $table->unique([
-                'user_id', 
-                'book_id',
-            ]);
         });
     }
 
