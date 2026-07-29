@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            
+
             $table->unsignedTinyInteger('rating');
             $table->text('comment');
 
