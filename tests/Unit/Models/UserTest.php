@@ -3,15 +3,15 @@
 namespace Tests\Unit\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
     public function test_books_relationship_returns_has_many(): void
     {
-        $user = new User();
+        $user = new User;
 
         $this->assertInstanceOf(
             HasMany::class,
@@ -21,7 +21,7 @@ class UserTest extends TestCase
 
     public function test_reviews_relationship_returns_has_many(): void
     {
-        $user = new User();
+        $user = new User;
 
         $this->assertInstanceOf(
             HasMany::class,
@@ -31,7 +31,7 @@ class UserTest extends TestCase
 
     public function test_favorite_books_relationship_returns_belongs_to_many(): void
     {
-        $user = new User();
+        $user = new User;
 
         $this->assertInstanceOf(
             BelongsToMany::class,
@@ -41,7 +41,7 @@ class UserTest extends TestCase
 
     public function test_liked_reviews_relationship_returns_belongs_to_many(): void
     {
-        $user = new User();
+        $user = new User;
 
         $this->assertInstanceOf(
             BelongsToMany::class,

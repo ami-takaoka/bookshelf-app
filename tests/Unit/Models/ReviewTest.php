@@ -11,7 +11,7 @@ class ReviewTest extends TestCase
 {
     public function test_user_relationship_returns_belongs_to(): void
     {
-        $review = new Review();
+        $review = new Review;
 
         $this->assertInstanceOf(
             BelongsTo::class,
@@ -21,7 +21,7 @@ class ReviewTest extends TestCase
 
     public function test_book_relationship_returns_belongs_to(): void
     {
-        $review = new Review();
+        $review = new Review;
 
         $this->assertInstanceOf(
             BelongsTo::class,
@@ -31,11 +31,11 @@ class ReviewTest extends TestCase
 
     public function test_liked_by_users_relationship_returns_belongs_to_many(): void
     {
-        $review = new Review();
+        $review = new Review;
 
         $this->assertInstanceOf(
             BelongsToMany::class,
             $review->likedByUsers()
         );
-    }    
+    }
 }
