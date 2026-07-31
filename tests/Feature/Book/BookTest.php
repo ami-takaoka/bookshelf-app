@@ -13,7 +13,6 @@ class BookTest extends TestCase
     use RefreshDatabase;
 
     // =========================
-    // BOOK-01 ～ BOOK-02
     // 書籍一覧
     // =========================
 
