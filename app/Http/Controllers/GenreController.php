@@ -27,7 +27,7 @@ class GenreController extends Controller
 
         return redirect()
             ->route('genres.index')
-            ->with('success', 'ジャンルを登録しました。');
+            ->with('success', 'ジャンルを登録しました');
     }
 
     public function show(Genre $genre): View
@@ -50,7 +50,7 @@ class GenreController extends Controller
 
         return redirect()
             ->route('genres.index')
-            ->with('success', 'ジャンルを更新しました。');
+            ->with('success', 'ジャンルを更新しました');
     }
 
     public function destroy(Genre $genre): RedirectResponse
@@ -58,13 +58,13 @@ class GenreController extends Controller
         if ($genre->books()->exists()) {
             return redirect()
                 ->route('genres.index')
-                ->with('error', '書籍が紐づいているジャンルは削除できません。');
+                ->with('error', '書籍が紐づいているジャンルは削除できません');
         }
 
         $genre->delete();
 
         return redirect()
             ->route('genres.index')
-            ->with('success', 'ジャンルを削除しました。');
+            ->with('success', 'ジャンルを削除しました');
     }
 }
