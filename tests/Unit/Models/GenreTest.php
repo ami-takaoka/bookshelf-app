@@ -2,19 +2,23 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Book;
 use App\Models\Genre;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class GenreTest extends TestCase
 {
-    public function test_books_relationship_returns_belongs_to_many(): void
-    {
-        $genre = new Genre;
+    use RefreshDatabase;
 
-        $this->assertInstanceOf(
-            BelongsToMany::class,
-            $genre->books()
-        );
+    public function test_ジャンルのリレーションが定義されている(): void
+    {
+        $genre = Genre::factory()->create();
+
+        $book = Book::factory()->create();
+
+        $genre->books()->attach($book);
+
+        $this->assertTrue($genre->books->contains($book));
     }
 }

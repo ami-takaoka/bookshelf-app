@@ -2,40 +2,31 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Book;
 use App\Models\Review;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ReviewTest extends TestCase
 {
-    public function test_user_relationship_returns_belongs_to(): void
+    use RefreshDatabase;
+
+    public function test_レビューのリレーションが定義されている(): void
     {
-        $review = new Review;
+        $user = User::factory()->create();
 
-        $this->assertInstanceOf(
-            BelongsTo::class,
-            $review->user()
-        );
-    }
+        $book = Book::factory()->create();
 
-    public function test_book_relationship_returns_belongs_to(): void
-    {
-        $review = new Review;
+        $review = Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
 
-        $this->assertInstanceOf(
-            BelongsTo::class,
-            $review->book()
-        );
-    }
+        $review->likedByUsers()->attach($user);
 
-    public function test_liked_by_users_relationship_returns_belongs_to_many(): void
-    {
-        $review = new Review;
-
-        $this->assertInstanceOf(
-            BelongsToMany::class,
-            $review->likedByUsers()
-        );
+        $this->assertTrue($review->user->is($user));
+        $this->assertTrue($review->book->is($book));
+        $this->assertTrue($review->likedByUsers->contains($user));
     }
 }
