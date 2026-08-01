@@ -2,50 +2,36 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Book;
+use App\Models\Review;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
-    public function test_books_relationship_returns_has_many(): void
+    use RefreshDatabase;
+
+    public function test_ユーザーのリレーションが定義されている(): void
     {
-        $user = new User;
+        $user = User::factory()->create();
 
-        $this->assertInstanceOf(
-            HasMany::class,
-            $user->books()
-        );
-    }
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
-    public function test_reviews_relationship_returns_has_many(): void
-    {
-        $user = new User;
+        $review = Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
 
-        $this->assertInstanceOf(
-            HasMany::class,
-            $user->reviews()
-        );
-    }
+        $user->favoriteBooks()->attach($book);
 
-    public function test_favorite_books_relationship_returns_belongs_to_many(): void
-    {
-        $user = new User;
+        $user->likedReviews()->attach($review);
 
-        $this->assertInstanceOf(
-            BelongsToMany::class,
-            $user->favoriteBooks()
-        );
-    }
-
-    public function test_liked_reviews_relationship_returns_belongs_to_many(): void
-    {
-        $user = new User;
-
-        $this->assertInstanceOf(
-            BelongsToMany::class,
-            $user->likedReviews()
-        );
+        $this->assertTrue($user->books->contains($book));
+        $this->assertTrue($user->reviews->contains($review));
+        $this->assertTrue($user->favoriteBooks->contains($book));
+        $this->assertTrue($user->likedReviews->contains($review));
     }
 }

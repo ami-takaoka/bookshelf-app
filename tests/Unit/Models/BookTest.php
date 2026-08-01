@@ -3,50 +3,38 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Book;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Genre;
+use App\Models\Review;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class BookTest extends TestCase
 {
-    public function test_user_relationship_returns_belongs_to(): void
+    use RefreshDatabase;
+
+    public function test_書籍のリレーションが定義されている(): void
     {
-        $book = new Book;
+        $user = User::factory()->create();
 
-        $this->assertInstanceOf(
-            BelongsTo::class,
-            $book->user()
-        );
-    }
+        $genre = Genre::factory()->create();
 
-    public function test_reviews_relationship_returns_has_many(): void
-    {
-        $book = new Book;
+        $book = Book::factory()
+            ->for($user)
+            ->create();
 
-        $this->assertInstanceOf(
-            HasMany::class,
-            $book->reviews()
-        );
-    }
+        $review = Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
 
-    public function test_genres_relationship_returns_belongs_to_many(): void
-    {
-        $book = new Book;
+        $book->genres()->attach($genre);
 
-        $this->assertInstanceOf(
-            BelongsToMany::class,
-            $book->genres()
-        );
-    }
+        $book->favoritedByUsers()->attach($user);
 
-    public function test_favorited_by_users_relationship_returns_belongs_to_many(): void
-    {
-        $book = new Book;
-
-        $this->assertInstanceOf(
-            BelongsToMany::class,
-            $book->favoritedByUsers()
-        );
+        $this->assertTrue($book->user->is($user));
+        $this->assertTrue($book->reviews->contains($review));
+        $this->assertTrue($book->genres->contains($genre));
+        $this->assertTrue($book->favoritedByUsers->contains($user));
     }
 }
