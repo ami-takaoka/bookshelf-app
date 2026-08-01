@@ -9,18 +9,37 @@ use App\Http\Resources\BookDetailResource;
 use App\Http\Resources\BookResource;
 use App\Http\Resources\BookStoreResource;
 use App\Models\Book;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('genres')
+        $query = Book::with('genres')
             ->withCount('reviews')
-            ->withAvg('reviews', 'rating')
-            ->get();
+            ->withAvg('reviews', 'rating');
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+
+            $query->where(function ($query) use ($keyword) {
+                $query->where('title', 'like', "%{$keyword}%")
+                    ->orWhere('author', 'like', "%{$keyword}%");
+            });
+        }
+
+        if ($request->filled('genre')) {
+            $genreId = $request->genre;
+
+            $query->whereHas('genres', function ($query) use ($genreId) {
+                $query->where('genres.id', $genreId);
+            });
+        }
+
+        $books = $query->paginate(10);
 
         return BookResource::collection($books);
     }
