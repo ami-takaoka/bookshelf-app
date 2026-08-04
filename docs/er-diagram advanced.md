@@ -1,4 +1,4 @@
-# BookShelf ER図
+# BookShelf 応用ER図
 
 ```mermaid
 erDiagram
@@ -64,6 +64,18 @@ erDiagram
         timestamp updated_at
     }
 
+    READING_PLANS {
+        bigint id PK
+        bigint user_id FK
+        bigint book_id FK
+        date target_date
+        varchar status
+        timestamp completed_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+
     USERS ||--o{ BOOKS : creates
     USERS ||--o{ REVIEWS : writes
 
@@ -77,4 +89,7 @@ erDiagram
 
     USERS ||--o{ REVIEW_LIKE : likes
     REVIEWS ||--o{ REVIEW_LIKE : receives
+
+    USERS ||--o{ READING_PLANS : manages
+    BOOKS ||--o{ READING_PLANS : planned_for
 ```
