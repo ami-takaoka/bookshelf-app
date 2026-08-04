@@ -1,11 +1,11 @@
 <mxfile host="65bd71144e">
     <diagram id="VVt7GiJqLdrpI_t9wm2b" name="ページ1">
-        <mxGraphModel dx="1643" dy="1588" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1643" dy="1668" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="40" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-119.5" y="-10" width="925" height="1313" as="geometry"/>
+                    <mxGeometry x="-150" y="-10" width="960" height="1710" as="geometry"/>
                 </mxCell>
                 <mxCell id="2" value="ログイン画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="280" y="139" width="120" height="60" as="geometry"/>
@@ -29,16 +29,16 @@
                     <mxGeometry x="52" y="640" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="8" value="ジャンル一覧画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="237" y="900" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="56" y="903" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="9" value="ジャンル詳細画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="67" y="1060" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-114" y="1063" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="10" value="ジャンル登録画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="237" y="1060" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="56" y="1063" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="11" value="ジャンル編集画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="397" y="1060" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="216" y="1063" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="15" value="お気に入り一覧画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="583" y="510" width="120" height="60" as="geometry"/>
@@ -96,20 +96,20 @@
                 </mxCell>
                 <mxCell id="30" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="295" y="960" as="sourcePoint"/>
-                        <mxPoint x="294" y="1058" as="targetPoint"/>
+                        <mxPoint x="114" y="963" as="sourcePoint"/>
+                        <mxPoint x="113" y="1061" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="38" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" target="11" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="356" y="928" as="sourcePoint"/>
-                        <mxPoint x="435.72" y="1039.6599999999999" as="targetPoint"/>
+                        <mxPoint x="175" y="931" as="sourcePoint"/>
+                        <mxPoint x="254.72000000000003" y="1042.6599999999999" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="39" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" target="9" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="237" y="928" as="sourcePoint"/>
-                        <mxPoint x="136.72000000000003" y="1036.02" as="targetPoint"/>
+                        <mxPoint x="56" y="931" as="sourcePoint"/>
+                        <mxPoint x="-44.27999999999997" y="1039.02" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="46" value="書籍詳細画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -131,43 +131,130 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="52" value="書籍詳細画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="67" y="1191" width="120" height="60" as="geometry"/>
+                    <mxGeometry x="-114" y="1194" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="53" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="127" y="1121" as="sourcePoint"/>
-                        <mxPoint x="127" y="1191" as="targetPoint"/>
+                        <mxPoint x="-54" y="1124" as="sourcePoint"/>
+                        <mxPoint x="-54" y="1194" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="55" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="55" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="50" y="380" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="56" value="書籍一覧画面(TOP)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="56" value="書籍一覧画面(TOP)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="283" y="261" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="57" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="57" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="583" y="380" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="58" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="58" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="411" y="380" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="60" value="レビュー編集画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="60" value="レビュー編集画面" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-95" y="640" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="61" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="5" target="60">
+                <mxCell id="61" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="5" target="60" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="-30" y="586" as="sourcePoint"/>
                         <mxPoint x="20" y="536" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="63" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                <mxCell id="63" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="294" y="830" as="sourcePoint"/>
-                        <mxPoint x="294" y="900" as="targetPoint"/>
+                        <mxPoint x="113" y="833" as="sourcePoint"/>
+                        <mxPoint x="113" y="903" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="64" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="237" y="770" width="120" height="60" as="geometry"/>
+                <mxCell id="64" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="56" y="773" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="マイ読書レポート&lt;div&gt;画面&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="529" y="904" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="586" y="834" as="sourcePoint"/>
+                        <mxPoint x="586" y="904" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="67" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="529" y="774" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="読書計画一覧画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="508" y="1445" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="即書計画作成画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="384" y="1605" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="書籍詳細画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="644" y="1605" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="71">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="627" y="1473" as="sourcePoint"/>
+                        <mxPoint x="706.72" y="1584.6599999999999" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="704" y="1473"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="73" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="508" y="1473" as="sourcePoint"/>
+                        <mxPoint x="448" y="1605" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="448" y="1473"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="74" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="569" y="1375" as="sourcePoint"/>
+                        <mxPoint x="569" y="1445" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="75" value="書籍一覧画面(TOP)&lt;div&gt;【同一画面】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="508" y="1315" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="通知一覧画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="63" y="1449" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="120" y="1379" as="sourcePoint"/>
+                        <mxPoint x="120" y="1449" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="書籍一覧画面(TOP)&lt;div&gt;【ヘッダー】&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="63" y="1319" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="読書計画編集画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="511" y="1605" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="569" y="1505" as="sourcePoint"/>
+                        <mxPoint x="568" y="1603" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="82" value="ジャンル詳細画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="413" y="1062" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="書籍詳細画面" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="651" y="1062" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="83">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="650" y="930" as="sourcePoint"/>
+                        <mxPoint x="729.72" y="1041.6599999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="85" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="82">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="531" y="930" as="sourcePoint"/>
+                        <mxPoint x="430.72" y="1038.02" as="targetPoint"/>
+                    </mxGeometry>
                 </mxCell>
             </root>
         </mxGraphModel>
