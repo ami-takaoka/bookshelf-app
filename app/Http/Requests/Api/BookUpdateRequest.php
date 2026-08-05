@@ -24,7 +24,6 @@ class BookUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:100'],
             'isbn' => [
@@ -43,10 +42,6 @@ class BookUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'ユーザーIDは必須です',
-            'user_id.integer' => 'ユーザーIDは整数で指定してください',
-            'user_id.exists' => '指定されたユーザーは存在しません',
-
             'title.required' => 'タイトルを入力してください',
             'title.string' => 'タイトルは文字列で入力してください',
             'title.max' => 'タイトルは255文字以内で入力してください',
