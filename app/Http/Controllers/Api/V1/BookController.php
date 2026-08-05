@@ -51,6 +51,8 @@ class BookController extends Controller
     {
         $validated = $request->validated();
 
+        $validated['user_id'] = $request->user()->id;
+
         $genres = $validated['genres'];
 
         unset($validated['genres']);
@@ -84,7 +86,11 @@ class BookController extends Controller
      */
     public function update(BookUpdateRequest $request, Book $book)
     {
+        $this->authorize('update', $book);
+
         $validated = $request->validated();
+
+        $validated['user_id'] = $request->user()->id;
 
         $genres = $validated['genres'];
 
@@ -106,6 +112,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
+        
         $book->delete();
 
         return response()->noContent();
