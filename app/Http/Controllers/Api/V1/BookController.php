@@ -113,7 +113,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $this->authorize('delete', $book);
-        
+
         $book->delete();
 
         return response()->noContent();
