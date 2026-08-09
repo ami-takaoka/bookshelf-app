@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\IsbnSearchRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Services\GoogleBooksService;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
@@ -121,5 +125,23 @@ class BookController extends Controller
         return redirect()
             ->route('books.index')
             ->with('success', '書籍を削除しました');
+    }
+
+    /**
+     * ISBNからGoogle Books APIで書籍情報を取得する
+     */
+    public function searchIsbn(
+        IsbnSearchRequest $request,
+        GoogleBooksService $googleBooksService
+    ): JsonResponse {
+        try {
+            return response()->json(
+                $googleBooksService->search($request->isbn)
+            );
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], $e->getCode() ?: 500);
+        }
     }
 }
