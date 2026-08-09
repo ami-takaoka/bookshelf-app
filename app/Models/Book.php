@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Book extends Model
 {
@@ -20,6 +22,10 @@ class Book extends Model
         'published_date',
         'description',
         'image_url',
+    ];
+
+    protected $casts = [
+        'published_date' => 'date',
     ];
 
     // ======================
@@ -46,5 +52,39 @@ class Book extends Model
     {
         return $this->belongsToMany(User::class, 'favorites')
             ->withTimestamps();
+    }
+
+    // ======================
+    // クエリスコープ
+    // ======================
+
+    public function scopeKeyword(Builder $query, ?string $keyword): Builder
+    {
+        return $query->when($keyword, function (Builder $query, string $keyword) {
+            $query->where(function (Builder $query) use ($keyword) {
+                $query->where('title', 'like', "%{$keyword}%")
+                    ->orWhere('author', 'like', "%{$keyword}%");
+            });
+        });
+    }
+
+    public function scopeGenre(Builder $query, ?string $genreId): Builder
+    {
+        return $query->when($genreId, function (Builder $query, string $genreId) {
+            $query->whereHas('genres', function (Builder $query) use ($genreId) {
+                $query->where('genres.id', $genreId);
+            });
+        });
+    }
+
+    public function scopeSort(Builder $query, ?string $sort): Builder
+    {
+        return match ($sort) {
+            'newest' => $query->latest(),
+            'oldest' => $query->oldest(),
+            'rating' => $query->orderBy('reviews_avg_rating', 'desc'),
+            'title' => $query->orderBy('title'),
+            default => $query->latest(),
+        };
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
+use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Genre;
 
@@ -11,11 +12,20 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::paginate(10);
+        $genres = Genre::all();
 
-        return view('books.index', compact('books'));
+        $books = Book::query()
+            ->with('genres')
+            ->withAvg('reviews', 'rating')
+            ->keyword($request->keyword)
+            ->genre($request->genre)
+            ->sort($request->sort)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('books.index', compact('books', 'genres'));
     }
 
     /**
