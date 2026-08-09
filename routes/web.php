@@ -3,7 +3,10 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReadingPlanController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy'])
         ->name('books.destroy');
 
+    Route::get('/books/isbn/{isbn}', [BookController::class, 'searchIsbn'])
+        ->name('books.isbn');
+
     // お気に入り
     Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])
         ->name('favorites.toggle');
@@ -69,6 +75,15 @@ Route::middleware('auth')->group(function () {
 
     // ジャンル
     Route::resource('genres', GenreController::class);
+
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
+
+    Route::get('/reading-plans', [ReadingPlanController::class, 'index'])
+        ->name('reading-plans.index');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
 });
 
 Route::get('/books/{book}', [BookController::class, 'show'])

@@ -3,19 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
+use App\Http\Requests\IsbnSearchRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Services\GoogleBooksService;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::paginate(10);
+        $genres = Genre::all();
 
-        return view('books.index', compact('books'));
+        $books = Book::query()
+            ->with('genres')
+            ->withAvg('reviews', 'rating')
+            ->keyword($request->keyword)
+            ->genre($request->genre)
+            ->sort($request->sort)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('books.index', compact('books', 'genres'));
     }
 
     /**
@@ -111,5 +125,23 @@ class BookController extends Controller
         return redirect()
             ->route('books.index')
             ->with('success', '書籍を削除しました');
+    }
+
+    /**
+     * ISBNからGoogle Books APIで書籍情報を取得する
+     */
+    public function searchIsbn(
+        IsbnSearchRequest $request,
+        GoogleBooksService $googleBooksService
+    ): JsonResponse {
+        try {
+            return response()->json(
+                $googleBooksService->search($request->isbn)
+            );
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], $e->getCode() ?: 500);
+        }
     }
 }
