@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
     // ジャンル
     Route::resource('genres', GenreController::class);
 
+    // マイ読書レポート
     Route::get('/reports', [ReportController::class, 'index'])
         ->name('reports.index');
 
