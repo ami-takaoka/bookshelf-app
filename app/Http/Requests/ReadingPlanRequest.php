@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\ReadingPlanStatus;
 use App\Models\ReadingPlan;
-use Illuminate\Validation\Validator;
+use Illuminate\Contracts\Validation\Validator;
 
 class ReadingPlanRequest extends FormRequest
 {
@@ -24,8 +24,14 @@ class ReadingPlanRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->isMethod('post')) {
+            return [
+                'book_id' => ['required', 'exists:books,id'],
+                'target_date' => ['required', 'date', 'after_or_equal:today'],
+            ];
+        }
+
         return [
-            'book_id' => ['required', 'exists:books,id'],
             'target_date' => ['required', 'date', 'after_or_equal:today'],
         ];
     }
@@ -42,8 +48,12 @@ class ReadingPlanRequest extends FormRequest
         ];
     }
 
-    public function withValidator($validator): void
+    public function withValidator(Validator $validator): void
     {
+        if (! $this->isMethod('post')) {
+            return;
+        }
+
         $validator->after(function (Validator $validator) {
 
             $exists = ReadingPlan::where('user_id', auth()->id())

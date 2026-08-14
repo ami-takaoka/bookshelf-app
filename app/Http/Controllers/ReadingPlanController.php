@@ -39,7 +39,7 @@ class ReadingPlanController extends Controller
     public function store(ReadingPlanRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        
+
         ReadingPlan::create([
             'user_id' => auth()->id(),
             'book_id' => $validated['book_id'],
@@ -52,6 +52,24 @@ class ReadingPlanController extends Controller
             ->with('success', '読書計画を登録しました');
     }
 
+    public function edit(ReadingPlan $readingPlan): View
+    {
+        return view('reading-plans.edit', compact('readingPlan'));
+    }
 
+    public function update(ReadingPlanRequest $request,ReadingPlan $readingPlan): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        $readingPlan->update([
+            'target_date' => $validated['target_date'],
+        ]);
+
+        return redirect()
+            ->route('reading-plans.index')
+            ->with('success', '読書計画を更新しました');
+    }
+
+    
 
 }
