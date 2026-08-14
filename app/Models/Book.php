@@ -53,6 +53,11 @@ class Book extends Model
             ->withTimestamps();
     }
 
+    public function readingPlans(): HasMany
+    {
+        return $this->hasMany(ReadingPlan::class);
+    }
+
     // ======================
     // クエリスコープ
     // ======================

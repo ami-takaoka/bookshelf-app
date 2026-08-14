@@ -80,8 +80,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])
         ->name('reports.index');
 
-    Route::get('/reading-plans', [ReadingPlanController::class, 'index'])
-        ->name('reading-plans.index');
+    // 読書計画
+    Route::resource('reading-plans', ReadingPlanController::class);
+
+    Route::post('/reading-plans/{reading_plan}/complete', [ReadingPlanController::class, 'complete'])
+        ->name('reading-plans.complete');
 
     Route::get('/notifications', [NotificationController::class, 'index'])
         ->name('notifications.index');
