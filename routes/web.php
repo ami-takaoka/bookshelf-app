@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
     // 読書計画
     Route::resource('reading-plans', ReadingPlanController::class);
 
-    Route::post('/reading-plans/{plan}/complete', [ReadingPlanController::class, 'complete'])
+    Route::post('/reading-plans/{reading_plan}/complete', [ReadingPlanController::class, 'complete'])
         ->name('reading-plans.complete');
 
     Route::get('/notifications', [NotificationController::class, 'index'])
