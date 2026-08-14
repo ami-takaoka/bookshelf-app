@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\View\View;
-use App\Models\ReadingPlan;
 
+use App\Enums\ReadingPlanStatus;
+use App\Http\Requests\ReadingPlanRequest;
+use App\Models\ReadingPlan;
+use App\Models\Book;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class ReadingPlanController extends Controller
 {
@@ -24,4 +28,30 @@ class ReadingPlanController extends Controller
             'currentStatus'
         ));
     }
+
+    public function create(): View
+    {
+        $books = Book::orderBy('title')->get();
+
+        return view('reading-plans.create', compact('books'));
+    }
+
+    public function store(ReadingPlanRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        
+        ReadingPlan::create([
+            'user_id' => auth()->id(),
+            'book_id' => $validated['book_id'],
+            'target_date' => $validated['target_date'],
+            'status' => ReadingPlanStatus::Pending,
+        ]);
+
+        return redirect()
+            ->route('reading-plans.index')
+            ->with('success', '読書計画を登録しました');
+    }
+
+
+
 }
