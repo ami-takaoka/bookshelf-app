@@ -86,8 +86,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/reading-plans/{reading_plan}/complete', [ReadingPlanController::class, 'complete'])
         ->name('reading-plans.complete');
 
+    // 通知一覧画面
     Route::get('/notifications', [NotificationController::class, 'index'])
         ->name('notifications.index');
+
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'read'])
+        ->name('notifications.read');
 });
 
 Route::get('/books/{book}', [BookController::class, 'show'])
