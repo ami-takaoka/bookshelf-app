@@ -16,8 +16,7 @@ class ReadingPlanReminderNotification extends Notification
     public function __construct(
         private ReadingPlan $readingPlan,
         private string $timing,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.
@@ -40,6 +39,7 @@ class ReadingPlanReminderNotification extends Notification
             'title' => '読書リマインダー',
             'body' => $this->createBody(),
             'timing' => $this->timing,
+            'reading_plan_id' => $this->readingPlan->id,
         ];
     }
 
