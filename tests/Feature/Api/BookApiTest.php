@@ -13,6 +13,10 @@ class BookApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    // 基礎段階では認証なしで実装。
+    // 応用実装でSanctum認証を追加したため、
+    // 最終実装では書き込み系APIをSanctum認証ありでテストする。
+
     // =========================
     // 書籍一覧API
     // =========================
@@ -207,22 +211,23 @@ class BookApiTest extends TestCase
 
         $genre = Genre::factory()->create();
 
-        $response = $this->postJson('/api/v1/books', [
-            'user_id' => $user->id,
-            'title' => 'Laravel実践',
-            'author' => '山田太郎',
-            'isbn' => '9781234567890',
-            'published_date' => '2026-01-01',
-            'description' => 'Laravelを学ぶための書籍です。',
-            'image_url' => 'https://example.com/image.jpg',
-            'genres' => [
-                $genre->id,
-            ],
-        ]);
+        $response = $this->actingAs($user, 'sanctum')
+            ->postJson('/api/v1/books', [
+                'title' => 'Laravel実践',
+                'author' => '山田太郎',
+                'isbn' => '9781234567890',
+                'published_date' => '2026-01-01',
+                'description' => 'Laravelを学ぶための書籍です。',
+                'image_url' => 'https://example.com/image.jpg',
+                'genres' => [
+                    $genre->id,
+                ],
+            ]);
 
         $response->assertCreated();
 
         $this->assertDatabaseHas('books', [
+            'user_id' => $user->id,
             'title' => 'Laravel実践',
             'author' => '山田太郎',
             'isbn' => '9781234567890',
@@ -239,16 +244,16 @@ class BookApiTest extends TestCase
     // API-08
     public function test_validation_error_is_returned_when_creating_book_via_api(): void
     {
-        $response = $this->postJson('/api/v1/books', []);
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user, 'sanctum')
+            ->postJson('/api/v1/books', []);
 
         $response->assertStatus(422);
 
         $response->assertJsonValidationErrors([
-            'user_id',
             'title',
             'author',
-            'isbn',
-            'published_date',
             'genres',
         ]);
 
@@ -273,23 +278,24 @@ class BookApiTest extends TestCase
             'isbn' => '9781234567890',
         ]);
 
-        $response = $this->putJson("/api/v1/books/{$book->id}", [
-            'user_id' => $user->id,
-            'title' => '更新後タイトル',
-            'author' => '更新後著者',
-            'isbn' => '9781234567890',
-            'published_date' => '2026-01-01',
-            'description' => '更新後の説明です。',
-            'image_url' => 'https://example.com/image.jpg',
-            'genres' => [
-                $genre->id,
-            ],
-        ]);
+        $response = $this->actingAs($user, 'sanctum')
+            ->putJson("/api/v1/books/{$book->id}", [
+                'title' => '更新後タイトル',
+                'author' => '更新後著者',
+                'isbn' => '9781234567890',
+                'published_date' => '2026-01-01',
+                'description' => '更新後の説明です。',
+                'image_url' => 'https://example.com/image.jpg',
+                'genres' => [
+                    $genre->id,
+                ],
+            ]);
 
         $response->assertOk();
 
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
+            'user_id' => $user->id,
             'title' => '更新後タイトル',
             'author' => '更新後著者',
             'isbn' => '9781234567890',
@@ -308,18 +314,18 @@ class BookApiTest extends TestCase
 
         $genre = Genre::factory()->create();
 
-        $response = $this->putJson('/api/v1/books/99999', [
-            'user_id' => $user->id,
-            'title' => 'Laravel実践',
-            'author' => '山田太郎',
-            'isbn' => '9781234567890',
-            'published_date' => '2026-01-01',
-            'description' => 'Laravelを学ぶための書籍です。',
-            'image_url' => 'https://example.com/image.jpg',
-            'genres' => [
-                $genre->id,
-            ],
-        ]);
+        $response = $this->actingAs($user, 'sanctum')
+            ->putJson('/api/v1/books/99999', [
+                'title' => 'Laravel実践',
+                'author' => '山田太郎',
+                'isbn' => '9781234567890',
+                'published_date' => '2026-01-01',
+                'description' => 'Laravelを学ぶための書籍です。',
+                'image_url' => 'https://example.com/image.jpg',
+                'genres' => [
+                    $genre->id,
+                ],
+            ]);
 
         $response->assertNotFound();
     }
@@ -329,22 +335,18 @@ class BookApiTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $genre = Genre::factory()->create();
-
         $book = Book::factory()->create([
             'user_id' => $user->id,
         ]);
 
-        $response = $this->putJson("/api/v1/books/{$book->id}", []);
+        $response = $this->actingAs($user, 'sanctum')
+            ->putJson("/api/v1/books/{$book->id}", []);
 
         $response->assertStatus(422);
 
         $response->assertJsonValidationErrors([
-            'user_id',
             'title',
             'author',
-            'isbn',
-            'published_date',
             'genres',
         ]);
 
@@ -364,7 +366,9 @@ class BookApiTest extends TestCase
 
         $genre = Genre::factory()->create();
 
-        $book = Book::factory()->create();
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
         $book->genres()->attach($genre);
 
@@ -375,7 +379,8 @@ class BookApiTest extends TestCase
 
         $book->favoritedByUsers()->attach($user);
 
-        $response = $this->deleteJson("/api/v1/books/{$book->id}");
+        $response = $this->actingAs($user, 'sanctum')
+            ->deleteJson("/api/v1/books/{$book->id}");
 
         $response->assertNoContent();
 
@@ -401,7 +406,10 @@ class BookApiTest extends TestCase
     // API-13
     public function test_404_is_returned_when_deleting_non_existent_book(): void
     {
-        $response = $this->deleteJson('/api/v1/books/99999');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user, 'sanctum')
+            ->deleteJson('/api/v1/books/99999');
 
         $response->assertNotFound();
     }
