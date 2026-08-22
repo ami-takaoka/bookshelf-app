@@ -10,6 +10,11 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
+    // =========================
+    // 会員登録
+    // =========================
+
+    // AUTH-01
     public function test_register_screen_can_be_rendered(): void
     {
         $response = $this->get('/register');
@@ -21,6 +26,7 @@ class AuthTest extends TestCase
             ->assertSee('パスワード確認');
     }
 
+    // AUTH-02
     public function test_registration_requires_name(): void
     {
         $response = $this->post('/register', [
@@ -35,6 +41,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-03
     public function test_registration_requires_email(): void
     {
         $response = $this->post('/register', [
@@ -49,6 +56,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-04
     public function test_registration_requires_valid_email(): void
     {
         $response = $this->post('/register', [
@@ -63,6 +71,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-05
     public function test_registration_requires_unique_email(): void
     {
         User::factory()->create([
@@ -81,6 +90,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-06
     public function test_registration_requires_password(): void
     {
         $response = $this->post('/register', [
@@ -95,6 +105,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-07
     public function test_registration_requires_password_with_minimum_8_characters(): void
     {
         $response = $this->post('/register', [
@@ -109,6 +120,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-08
     public function test_registration_requires_password_confirmation(): void
     {
         $response = $this->post('/register', [
@@ -123,6 +135,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-09
     public function test_user_can_register(): void
     {
         $response = $this->post('/register', [
@@ -142,6 +155,43 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-10
+    public function test_registration_requires_email_within_255_characters(): void
+    {
+        $email = str_repeat('a', 244) . '@example.com';
+
+        $response = $this->post('/register', [
+            'name' => 'テストユーザー',
+            'email' => $email,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'email' => 'メールアドレスは255文字以内で入力してください',
+        ]);
+    }
+
+    // AUTH-11
+    public function test_registration_requires_name_within_50_characters(): void
+    {
+        $response = $this->post('/register', [
+            'name' => str_repeat('あ', 51),
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'name' => 'お名前は50文字以内で入力してください',
+        ]);
+    }
+
+    // =========================
+    // ログイン
+    // =========================
+
+    // AUTH-12
     public function test_login_screen_can_be_rendered(): void
     {
         $response = $this->get('/login');
@@ -151,6 +201,7 @@ class AuthTest extends TestCase
             ->assertSee('パスワード');
     }
 
+    // AUTH-13
     public function test_login_requires_email(): void
     {
         $response = $this->post('/login', [
@@ -163,6 +214,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-14
     public function test_login_requires_password(): void
     {
         $response = $this->post('/login', [
@@ -175,6 +227,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // AUTH-15
     public function test_user_cannot_login_with_invalid_credentials(): void
     {
         User::factory()->create([
@@ -194,6 +247,7 @@ class AuthTest extends TestCase
         $this->assertGuest();
     }
 
+    // AUTH-16
     public function test_user_can_login(): void
     {
         $user = User::factory()->create([
@@ -211,6 +265,11 @@ class AuthTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    // =========================
+    // ログアウト
+    // =========================
+
+    // AUTH-17
     public function test_user_can_logout(): void
     {
         $user = User::factory()->create();
