@@ -75,6 +75,16 @@ erDiagram
         timestamp updated_at
     }
 
+    NOTIFICATIONS {
+        uuid id PK
+        varchar type
+        varchar notifiable_type
+        bigint notifiable_id
+        text data
+        timestamp read_at
+        timestamp created_at
+        timestamp updated_at
+    }
 
     USERS ||--o{ BOOKS : creates
     USERS ||--o{ REVIEWS : writes
