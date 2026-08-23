@@ -12,7 +12,6 @@ class GenreResource extends JsonResource
      *
      * ジャンルのIDと名称を返す。
      *
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

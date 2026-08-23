@@ -12,7 +12,6 @@ class BookResource extends JsonResource
      *
      * ジャンル、平均評価、レビュー件数を含む書籍情報を返す。
      *
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

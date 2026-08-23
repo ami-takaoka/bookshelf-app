@@ -10,8 +10,6 @@ class NotificationController extends Controller
 {
     /**
      * ログインユーザーの通知一覧を表示する。
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -25,9 +23,6 @@ class NotificationController extends Controller
 
     /**
      * 指定した通知を既読にする。
-     *
-     * @param DatabaseNotification $notification
-     * @return RedirectResponse
      */
     public function read(DatabaseNotification $notification): RedirectResponse
     {

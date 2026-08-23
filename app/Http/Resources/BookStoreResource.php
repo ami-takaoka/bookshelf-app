@@ -12,7 +12,6 @@ class BookStoreResource extends JsonResource
      *
      * 登録・更新した書籍の基本情報とジャンルを返す。
      *
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

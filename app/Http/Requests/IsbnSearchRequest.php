@@ -9,8 +9,6 @@ class IsbnSearchRequest extends FormRequest
 {
     /**
      * リクエストの実行を許可する。
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -44,8 +42,6 @@ class IsbnSearchRequest extends FormRequest
 
     /**
      * バリデーション前にルートパラメータのISBNをリクエストへマージする。
-     *
-     * @return void
      */
     protected function prepareForValidation(): void
     {

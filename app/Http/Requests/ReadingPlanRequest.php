@@ -12,8 +12,6 @@ class ReadingPlanRequest extends FormRequest
 {
     /**
      * リクエストの実行を許可する。
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -63,9 +61,6 @@ class ReadingPlanRequest extends FormRequest
      *
      * POSTリクエストの場合のみ、同一ユーザー・同一書籍の
      * 未完了または期限切れの読書計画が既に存在するか確認する。
-     *
-     * @param Validator $validator
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {

@@ -11,10 +11,6 @@ class BookPolicy
      * ユーザーが書籍を更新できるか判定する。
      *
      * 書籍の登録者本人である場合に更新を許可する。
-     *
-     * @param User $user
-     * @param Book $book
-     * @return bool
      */
     public function update(User $user, Book $book): bool
     {
@@ -25,10 +21,6 @@ class BookPolicy
      * ユーザーが書籍を削除できるか判定する。
      *
      * 書籍の登録者本人である場合に削除を許可する。
-     *
-     * @param User $user
-     * @param Book $book
-     * @return bool
      */
     public function delete(User $user, Book $book): bool
     {

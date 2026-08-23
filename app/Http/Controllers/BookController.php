@@ -19,9 +19,6 @@ class BookController extends Controller
      * 書籍一覧を表示する。
      *
      * キーワード、ジャンル、並び順による絞り込みに対応する。
-     *
-     * @param Request $request
-     * @return View
      */
     public function index(Request $request): View
     {
@@ -41,8 +38,6 @@ class BookController extends Controller
 
     /**
      * 書籍登録画面を表示する。
-     *
-     * @return View
      */
     public function create(): View
     {
@@ -53,9 +48,6 @@ class BookController extends Controller
 
     /**
      * 書籍を登録する。
-     *
-     * @param BookRequest $request
-     * @return RedirectResponse
      */
     public function store(BookRequest $request): RedirectResponse
     {
@@ -80,9 +72,6 @@ class BookController extends Controller
      * 書籍詳細を表示する。
      *
      * ジャンル、レビュー、レビューへのいいね情報を読み込む。
-     *
-     * @param Book $book
-     * @return View
      */
     public function show(Book $book): View
     {
@@ -97,9 +86,6 @@ class BookController extends Controller
 
     /**
      * 書籍編集画面を表示する。
-     *
-     * @param Book $book
-     * @return View
      */
     public function edit(Book $book): View
     {
@@ -112,10 +98,6 @@ class BookController extends Controller
 
     /**
      * 書籍を更新する。
-     *
-     * @param BookRequest $request
-     * @param Book $book
-     * @return RedirectResponse
      */
     public function update(
         BookRequest $request,
@@ -141,9 +123,6 @@ class BookController extends Controller
 
     /**
      * 書籍を削除する。
-     *
-     * @param Book $book
-     * @return RedirectResponse
      */
     public function destroy(Book $book): RedirectResponse
     {
@@ -158,10 +137,6 @@ class BookController extends Controller
 
     /**
      * ISBNからGoogle Books APIで書籍情報を取得する。
-     *
-     * @param IsbnSearchRequest $request
-     * @param GoogleBooksService $googleBooksService
-     * @return JsonResponse
      */
     public function searchIsbn(
         IsbnSearchRequest $request,

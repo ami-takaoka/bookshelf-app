@@ -11,10 +11,6 @@ class ReviewPolicy
      * ユーザーがレビューを更新できるか判定する。
      *
      * レビューの投稿者本人である場合に更新を許可する。
-     *
-     * @param User $user
-     * @param Review $review
-     * @return bool
      */
     public function update(User $user, Review $review): bool
     {
@@ -25,10 +21,6 @@ class ReviewPolicy
      * ユーザーがレビューを削除できるか判定する。
      *
      * レビューの投稿者本人である場合に削除を許可する。
-     *
-     * @param User $user
-     * @param Review $review
-     * @return bool
      */
     public function delete(User $user, Review $review): bool
     {

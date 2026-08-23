@@ -10,8 +10,6 @@ class BookUpdateRequest extends FormRequest
 {
     /**
      * リクエストの実行を許可する。
-     *
-     * @return bool
      */
     public function authorize(): bool
     {

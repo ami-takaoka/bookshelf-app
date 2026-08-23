@@ -21,9 +21,6 @@ class BookController extends Controller
      *
      * キーワードとジャンルによる絞り込みに対応し、
      * レビュー件数と平均評価を含めてページネーションで返す。
-     *
-     * @param Request $request
-     * @return AnonymousResourceCollection
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -57,9 +54,6 @@ class BookController extends Controller
      * 新しい書籍を登録する。
      *
      * 認証ユーザーを登録者として設定し、指定されたジャンルを紐付ける。
-     *
-     * @param BookRequest $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function store(BookRequest $request): JsonResponse
     {
@@ -82,9 +76,6 @@ class BookController extends Controller
      * 指定した書籍の詳細を取得する。
      *
      * ジャンルとレビュー投稿者の情報を含めて返す。
-     *
-     * @param Book $book
-     * @return BookDetailResource
      */
     public function show(Book $book): BookDetailResource
     {
@@ -100,10 +91,6 @@ class BookController extends Controller
      * 指定した書籍を更新する。
      *
      * 書籍の所有者のみ更新でき、ジャンルの紐付けも更新する。
-     *
-     * @param BookUpdateRequest $request
-     * @param Book $book
-     * @return \Illuminate\Http\JsonResponse
      */
     public function update(
         BookUpdateRequest $request,
@@ -130,9 +117,6 @@ class BookController extends Controller
      * 指定した書籍を削除する。
      *
      * 書籍の所有者のみ削除できる。
-     *
-     * @param Book $book
-     * @return Response
      */
     public function destroy(Book $book): Response
     {
