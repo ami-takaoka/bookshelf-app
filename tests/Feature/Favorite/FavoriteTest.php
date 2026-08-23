@@ -82,21 +82,32 @@ class FavoriteTest extends TestCase
     // =========================
 
     // FAVORITE-05
-    public function test_favorited_books_are_displayed_in_favorites_list(): void
+    public function test_favorited_books_are_displayed_10_per_page(): void
     {
         $user = User::factory()->create();
 
-        $book = Book::factory()->create([
-            'title' => 'Laravel入門',
-        ]);
+        $books = Book::factory()->count(11)->create();
 
-        $user->favoriteBooks()->attach($book->id);
+        foreach ($books as $index => $book) {
+            $book->update([
+                'title' => 'お気に入り確認用書籍' . ($index + 1),
+            ]);
+
+            $user->favoriteBooks()->attach($book->id);
+        }
 
         $response = $this->actingAs($user)
             ->get(route('favorites.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Laravel入門');
+
+        // 1ページ目に10冊表示される
+        foreach ($books->take(10) as $book) {
+            $response->assertSee($book->title);
+        }
+
+        // 11冊目は2ページ目なので、1ページ目には表示されない
+        $response->assertDontSee($books[10]->title);
     }
 
     // FAVORITE-06

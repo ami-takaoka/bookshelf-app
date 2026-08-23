@@ -166,4 +166,159 @@ class NotificationTest extends TestCase
 
         $response->assertRedirect(route('login'));
     }
+
+    // NOTIFICATION-07
+    // 複数の通知が存在する場合、通知日時の新しい順に表示される
+    public function test_notifications_are_displayed_in_newest_order(): void
+    {
+        $user = User::factory()->create();
+
+        $oldNotification = DatabaseNotification::create([
+            'id' => 'notification-old',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '古い通知',
+                'body' => '古い通知の本文です。',
+                'timing' => 'three_days_before',
+                'reading_plan_id' => 1,
+            ],
+            'created_at' => now()->subMinutes(10),
+        ]);
+
+        $newNotification = DatabaseNotification::create([
+            'id' => 'notification-new',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '新しい通知',
+                'body' => '新しい通知の本文です。',
+                'timing' => 'on_due_date',
+                'reading_plan_id' => 2,
+            ],
+            'created_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('notifications.index'));
+
+        $response->assertOk()
+            ->assertSeeInOrder([
+                '新しい通知',
+                '古い通知',
+            ]);
+    }
+
+    // NOTIFICATION-08
+    // 通知が存在する場合、通知のタイトル・本文・通知日時が表示される
+    public function test_notification_title_and_body_are_displayed(): void
+    {
+        $user = User::factory()->create();
+
+        DatabaseNotification::create([
+            'id' => 'notification-details',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '通知タイトル',
+                'body' => '通知本文が表示されます。',
+                'timing' => 'on_due_date',
+                'reading_plan_id' => 1,
+            ],
+            'created_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('notifications.index'));
+
+        $response->assertOk()
+            ->assertSee('通知タイトル')
+            ->assertSee('通知本文が表示されます。');
+    }
+
+    // NOTIFICATION-09
+    // 既読の通知には「未読」ラベルと「既読にする」ボタンが表示されない
+    public function test_read_notification_does_not_display_unread_label_or_read_button(): void
+    {
+        $user = User::factory()->create();
+
+        DatabaseNotification::create([
+            'id' => 'notification-already-read',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '既読通知',
+                'body' => 'すでに既読になっている通知です。',
+                'timing' => 'on_due_date',
+                'reading_plan_id' => 1,
+            ],
+            'read_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('notifications.index'));
+
+        $response->assertOk()
+            ->assertSee('既読通知')
+            ->assertDontSee('未読')
+            ->assertDontSee('既読にする');
+    }
+
+    // NOTIFICATION-10
+    // 3日前・当日・3日経過後の通知は、タイミングに応じた本文が表示される
+    public function test_notification_body_matches_reminder_timing(): void
+    {
+        $user = User::factory()->create();
+
+        DatabaseNotification::create([
+            'id' => 'notification-three-days-before',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '3日前のリマインダー',
+                'body' => '読書計画の期日まであと3日です。',
+                'timing' => 'three_days_before',
+                'reading_plan_id' => 1,
+            ],
+        ]);
+
+        DatabaseNotification::create([
+            'id' => 'notification-on-due-date',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '当日のリマインダー',
+                'body' => '読書計画の期日は今日です。',
+                'timing' => 'on_due_date',
+                'reading_plan_id' => 2,
+            ],
+        ]);
+
+        DatabaseNotification::create([
+            'id' => 'notification-three-days-after',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '3日経過後のリマインダー',
+                'body' => '読書計画の期日から3日経過しています。',
+                'timing' => 'three_days_after',
+                'reading_plan_id' => 3,
+            ],
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('notifications.index'));
+
+        $response->assertOk()
+            ->assertSee('読書計画の期日まであと3日です。')
+            ->assertSee('読書計画の期日は今日です。')
+            ->assertSee('読書計画の期日から3日経過しています。');
+    }
 }

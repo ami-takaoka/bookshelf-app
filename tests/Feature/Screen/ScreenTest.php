@@ -3,6 +3,7 @@
 namespace Tests\Feature\Screen;
 
 use App\Models\Book;
+use App\Models\Genre;
 use App\Models\Review;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,6 +12,11 @@ class ScreenTest extends TestCase
 {
     use RefreshDatabase;
 
+    // =========================
+    // 画面アクセス
+    // =========================
+
+    // SCREEN-01
     public function test_books_index_can_be_rendered(): void
     {
         Book::factory()->create([
@@ -23,6 +29,7 @@ class ScreenTest extends TestCase
         $response->assertSee('テスト書籍');
     }
 
+    // SCREEN-02
     public function test_book_detail_can_be_rendered(): void
     {
         $isbn = '9781234567890';
@@ -31,7 +38,15 @@ class ScreenTest extends TestCase
             'title' => 'テスト書籍',
             'author' => 'テスト著者',
             'isbn' => $isbn,
+            'published_date' => '2025-01-01',
+            'description' => 'これはテスト用の書籍説明です。',
         ]);
+
+        $genre = Genre::factory()->create([
+            'name' => 'テストジャンル',
+        ]);
+
+        $book->genres()->attach($genre);
 
         Review::factory()->create([
             'book_id' => $book->id,
@@ -44,9 +59,13 @@ class ScreenTest extends TestCase
         $response->assertSee('テスト書籍');
         $response->assertSee('テスト著者');
         $response->assertSee($isbn);
+        $response->assertSee('2025-01-01');
+        $response->assertSee('テストジャンル');
+        $response->assertSee('これはテスト用の書籍説明です。');
         $response->assertSee('とても面白い本でした。');
     }
 
+    // SCREEN-03
     public function test_ranking_screen_can_be_rendered(): void
     {
         // ランキング対象の書籍

@@ -54,10 +54,83 @@ class BookTest extends TestCase
         $response->assertSee('山田太郎');
     }
 
+    // BOOK-03
+    public function test_message_is_displayed_when_no_books_exist(): void
+    {
+        $response = $this->get(route('books.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('書籍が見つかりませんでした。');
+    }
+
+    // BOOK-04
+    public function test_book_information_is_displayed_on_book_list(): void
+    {
+        $genre = Genre::factory()->create([
+            'name' => 'テストジャンル',
+        ]);
+
+        $book = Book::factory()->create([
+            'title' => 'テスト書籍',
+            'author' => 'テスト著者',
+            'image_url' => 'https://example.com/book.jpg',
+        ]);
+
+        $book->genres()->attach($genre->id);
+
+        $response = $this->get(route('books.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('テスト書籍');
+        $response->assertSee('テスト著者');
+        $response->assertSee('テストジャンル');
+        $response->assertSee('https://example.com/book.jpg');
+    }
+
+    // BOOK-05
+    public function test_no_image_message_is_displayed_when_image_url_is_not_registered(): void
+    {
+        $book = Book::factory()->create([
+            'title' => '画像なし書籍',
+            'image_url' => null,
+        ]);
+
+        $response = $this->get(route('books.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('画像なし');
+        $response->assertSee('画像なし書籍');
+    }
+
+    // BOOK-06
+    public function test_average_rating_is_displayed_when_book_has_reviews(): void
+    {
+        $book = Book::factory()->create([
+            'title' => '評価あり書籍',
+        ]);
+
+        $user = User::factory()->create();
+
+        $book->reviews()->create([
+            'user_id' => $user->id,
+            'rating' => 4,
+            'comment' => '良い本です。',
+        ]);
+
+        $response = $this->get(route('books.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('評価あり書籍');
+        $response->assertSee('(4.0)');
+
+        $this->assertSame(4, substr_count($response->getContent(), '★'));
+        $this->assertSame(1, substr_count($response->getContent(), '☆'));
+    }
+
     // =========================
     // 書籍登録
     // =========================
-    // BOOK-03
+    // BOOK-07
     public function test_guest_cannot_access_book_create_page(): void
     {
         $response = $this->get(route('books.create'));
@@ -65,7 +138,7 @@ class BookTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    // BOOK-04
+    // BOOK-08
     public function test_book_create_page_can_be_displayed(): void
     {
         $user = User::factory()->create();
@@ -82,7 +155,21 @@ class BookTest extends TestCase
         $response->assertSee('ジャンル');
     }
 
-    // BOOK-05
+    // BOOK-09
+    public function test_message_is_displayed_when_no_genres_are_registered(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->get(route('books.create'));
+
+        $response->assertStatus(200);
+        $response->assertSee(
+            'ジャンルが登録されていません。先にジャンルを登録してください。'
+        );
+    }
+
+    // BOOK-10
     public function test_book_cannot_be_created_without_title(): void
     {
         $user = User::factory()->create();
@@ -230,7 +317,77 @@ class BookTest extends TestCase
         $response->assertSessionHasErrors('published_date');
     }
 
-    // BOOK-06
+    // BOOK-11
+    public function test_book_cannot_be_created_with_invalid_input_format(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('books.store'), [
+                'title' => ['不正なタイトル'],
+                'author' => ['不正な著者'],
+                'isbn' => '12345',
+                'published_date' => 'invalid-date',
+                'description' => ['不正な説明'],
+                'image_url' => 'invalid-url',
+                'genres' => [$genre->id],
+            ]);
+
+        $response->assertSessionHasErrors([
+            'title',
+            'author',
+            'isbn',
+            'published_date',
+            'description',
+            'image_url',
+        ]);
+
+        $response->assertSessionHas(
+            'errors',
+            fn ($errors) =>
+                $errors->get('title')[0] === 'タイトルは文字列で入力してください'
+                && $errors->get('author')[0] === '著者は文字列で入力してください'
+                && $errors->get('isbn')[0] === 'ISBNは13桁で入力してください'
+                && $errors->get('published_date')[0] === '出版日は日付形式で入力してください'
+                && $errors->get('description')[0] === '説明は文字列で入力してください'
+                && $errors->get('image_url')[0] === '画像URLはURL形式で入力してください'
+        );
+    }
+
+    // BOOK-12
+    public function test_book_cannot_be_created_when_character_limit_is_exceeded(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('books.store'), [
+                'title' => str_repeat('あ', 256),
+                'author' => str_repeat('あ', 101),
+                'isbn' => '9781234567890',
+                'published_date' => '2025-01-01',
+                'description' => str_repeat('あ', 1001),
+                'image_url' => 'https://example.com/book.jpg',
+                'genres' => [$genre->id],
+            ]);
+
+        $response->assertSessionHasErrors([
+            'title',
+            'author',
+            'description',
+        ]);
+
+        $response->assertSessionHas(
+            'errors',
+            fn ($errors) =>
+                $errors->get('title')[0] === 'タイトルは255文字以内で入力してください'
+                && $errors->get('author')[0] === '著者は100文字以内で入力してください'
+                && $errors->get('description')[0] === '説明は1000文字以内で入力してください'
+        );
+    }
+
+    // BOOK-13
     public function test_book_cannot_be_created_with_duplicate_isbn(): void
     {
         $user = User::factory()->create();
@@ -253,7 +410,7 @@ class BookTest extends TestCase
         $response->assertSessionHasErrors('isbn');
     }
 
-    // BOOK-07
+    // BOOK-14
     public function test_authenticated_user_can_create_book(): void
     {
         $user = User::factory()->create();
@@ -279,7 +436,7 @@ class BookTest extends TestCase
         ]);
     }
 
-    // BOOK-08
+    // BOOK-15
     public function test_book_create_cancel_button_redirects_to_index(): void
     {
         $user = User::factory()->create();
@@ -317,7 +474,7 @@ class BookTest extends TestCase
     // 書籍編集
     // =========================
 
-    // BOOK-09
+    // BOOK-16
     public function test_guest_cannot_access_book_edit_page(): void
     {
         $book = Book::factory()->create();
@@ -327,7 +484,7 @@ class BookTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    // BOOK-10
+    // BOOK-17
     public function test_user_cannot_edit_other_users_book(): void
     {
         $owner = User::factory()->create();
@@ -343,7 +500,7 @@ class BookTest extends TestCase
         $response->assertForbidden();
     }
 
-    // BOOK-10 補足（更新処理）
+    // BOOK-17 補足（更新処理）
     public function test_user_cannot_update_other_users_book(): void
     {
         $owner = User::factory()->create();
@@ -374,7 +531,7 @@ class BookTest extends TestCase
         ]);
     }
 
-    // BOOK-11
+    // BOOK-18
     public function test_book_edit_page_can_be_displayed(): void
     {
         $user = User::factory()->create();
@@ -400,7 +557,7 @@ class BookTest extends TestCase
         $response->assertSee('https://example.com/book.jpg');
     }
 
-    // BOOK-12
+    // BOOK-19
     public function test_book_cannot_be_updated_without_title(): void
     {
         $user = User::factory()->create();
@@ -584,7 +741,85 @@ class BookTest extends TestCase
         $response->assertSessionHasErrors('published_date');
     }
 
-    // BOOK-13
+    // BOOK-20
+    public function test_book_cannot_be_updated_with_invalid_input_format(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->put(route('books.update', $book), [
+                'title' => ['不正なタイトル'],
+                'author' => ['不正な著者'],
+                'isbn' => '12345',
+                'published_date' => 'invalid-date',
+                'description' => ['不正な説明'],
+                'image_url' => 'invalid-url',
+                'genres' => [$genre->id],
+            ]);
+
+        $response->assertSessionHasErrors([
+            'title',
+            'author',
+            'isbn',
+            'published_date',
+            'description',
+            'image_url',
+        ]);
+
+        $response->assertSessionHas(
+            'errors',
+            fn ($errors) =>
+                $errors->get('title')[0] === 'タイトルは文字列で入力してください'
+                && $errors->get('author')[0] === '著者は文字列で入力してください'
+                && $errors->get('isbn')[0] === 'ISBNは13桁で入力してください'
+                && $errors->get('published_date')[0] === '出版日は日付形式で入力してください'
+                && $errors->get('description')[0] === '説明は文字列で入力してください'
+                && $errors->get('image_url')[0] === '画像URLはURL形式で入力してください'
+        );
+    }
+
+    // BOOK-21
+    public function test_book_cannot_be_updated_when_character_limit_is_exceeded(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->put(route('books.update', $book), [
+                'title' => str_repeat('あ', 256),
+                'author' => str_repeat('あ', 101),
+                'isbn' => '9781234567890',
+                'published_date' => '2025-01-01',
+                'description' => str_repeat('あ', 1001),
+                'image_url' => 'https://example.com/book.jpg',
+                'genres' => [$genre->id],
+            ]);
+
+        $response->assertSessionHasErrors([
+            'title',
+            'author',
+            'description',
+        ]);
+
+        $response->assertSessionHas(
+            'errors',
+            fn ($errors) =>
+                $errors->get('title')[0] === 'タイトルは255文字以内で入力してください'
+                && $errors->get('author')[0] === '著者は100文字以内で入力してください'
+                && $errors->get('description')[0] === '説明は1000文字以内で入力してください'
+        );
+    }
+
+    // BOOK-22
     public function test_book_cannot_be_updated_with_duplicate_isbn(): void
     {
         $user = User::factory()->create();
@@ -613,7 +848,7 @@ class BookTest extends TestCase
         $response->assertSessionHasErrors('isbn');
     }
 
-    // BOOK-14
+    // BOOK-23
     public function test_authenticated_user_can_update_book(): void
     {
         $user = User::factory()->create();
@@ -645,7 +880,7 @@ class BookTest extends TestCase
         ]);
     }
 
-    // BOOK-15
+    // BOOK-24
     public function test_book_edit_cancel_button_redirects_to_detail(): void
     {
         $user = User::factory()->create();
@@ -665,7 +900,7 @@ class BookTest extends TestCase
     // 書籍削除
     // =========================
 
-    // BOOK-16
+    // BOOK-25
     public function test_guest_cannot_delete_book(): void
     {
         $book = Book::factory()->create();
@@ -679,7 +914,7 @@ class BookTest extends TestCase
         ]);
     }
 
-    // BOOK-17
+    // BOOK-26
     public function test_user_cannot_delete_other_users_book(): void
     {
         $owner = User::factory()->create();
@@ -699,7 +934,7 @@ class BookTest extends TestCase
         ]);
     }
 
-    // BOOK-18
+    // BOOK-27
     public function test_authenticated_user_can_delete_book(): void
     {
         $user = User::factory()->create();
@@ -723,7 +958,7 @@ class BookTest extends TestCase
     // 例外処理
     // =========================
 
-    // BOOK-19
+    // BOOK-28
     public function test_non_existent_book_detail_page_returns_404(): void
     {
         $response = $this->get(route('books.show', 9999));
@@ -731,7 +966,7 @@ class BookTest extends TestCase
         $response->assertNotFound();
     }
 
-    // BOOK-20
+    // BOOK-29
     public function test_non_existent_book_edit_page_returns_404(): void
     {
         $user = User::factory()->create();
@@ -742,7 +977,7 @@ class BookTest extends TestCase
         $response->assertNotFound();
     }
 
-    // BOOK-21
+    // BOOK-30
     public function test_deleting_non_existent_book_returns_404(): void
     {
         $user = User::factory()->create();
