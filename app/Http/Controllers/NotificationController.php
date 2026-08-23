@@ -8,6 +8,11 @@ use Illuminate\View\View;
 
 class NotificationController extends Controller
 {
+    /**
+     * ログインユーザーの通知一覧を表示する。
+     *
+     * @return View
+     */
     public function index(): View
     {
         $notifications = auth()->user()
@@ -18,6 +23,12 @@ class NotificationController extends Controller
         return view('notifications.index', compact('notifications'));
     }
 
+    /**
+     * 指定した通知を既読にする。
+     *
+     * @param DatabaseNotification $notification
+     * @return RedirectResponse
+     */
     public function read(DatabaseNotification $notification): RedirectResponse
     {
         $this->authorize('read', $notification);

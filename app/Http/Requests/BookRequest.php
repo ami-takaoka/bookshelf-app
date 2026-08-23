@@ -9,7 +9,9 @@ use Illuminate\Validation\Rule;
 class BookRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * リクエストの実行を許可する。
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -17,7 +19,9 @@ class BookRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * 書籍登録・更新時のバリデーションルールを定義する。
+     *
+     * 更新時は、対象書籍自身を除外してISBNの一意性を検証する。
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -42,7 +46,9 @@ class BookRequest extends FormRequest
     }
 
     /**
-     * Get custom messages for validator errors.
+     * バリデーションエラーメッセージを定義する。
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -56,7 +62,7 @@ class BookRequest extends FormRequest
             'isbn.required' => 'ISBNを入力してください',
             'isbn.digits' => 'ISBNは13桁で入力してください',
             'isbn.unique' => 'このISBNは既に登録されています',
-            'published_date.required' => '出版日を入力してください',
+            'published_date.required' => '出版日は日付形式で入力してください',
             'published_date.date' => '出版日は日付形式で入力してください',
             'description.string' => '説明は文字列で入力してください',
             'description.max' => '説明は1000文字以内で入力してください',

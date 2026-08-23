@@ -8,7 +8,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class RegisterRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * リクエストの実行を許可する。
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -16,7 +18,9 @@ class RegisterRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * ユーザー登録時のバリデーションルールを定義する。
+     *
+     * 名前、メールアドレス、パスワードなどの入力値を検証する。
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -28,7 +32,6 @@ class RegisterRequest extends FormRequest
                 'string',
                 'max:50',
             ],
-
             'email' => [
                 'required',
                 'string',
@@ -36,14 +39,12 @@ class RegisterRequest extends FormRequest
                 'max:255',
                 'unique:users,email',
             ],
-
             'password' => [
                 'required',
                 'string',
                 'min:8',
                 'confirmed',
             ],
-
             'password_confirmation' => [
                 'required',
             ],
@@ -51,23 +52,22 @@ class RegisterRequest extends FormRequest
     }
 
     /**
-     * Get custom error messages for validator errors.
+     * バリデーションエラーメッセージを定義する。
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
         return [
             'name.required' => 'お名前を入力してください',
             'name.max' => 'お名前は50文字以内で入力してください',
-
             'email.required' => 'メールアドレスを入力してください',
             'email.email' => 'メールアドレスはメール形式で入力してください',
             'email.unique' => 'このメールアドレスは既に登録されています',
             'email.max' => 'メールアドレスは255文字以内で入力してください',
-
             'password.required' => 'パスワードを入力してください',
             'password.min' => 'パスワードは8文字以上で入力してください',
             'password.confirmed' => 'パスワードと一致しません',
-
             'password_confirmation.required' => '確認用パスワードを入力してください',
         ];
     }

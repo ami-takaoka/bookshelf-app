@@ -11,6 +11,13 @@ use Illuminate\View\View;
 
 class ReadingPlanController extends Controller
 {
+    /**
+     * ログインユーザーの読書計画一覧を表示する。
+     *
+     * ステータスが指定されている場合は、指定したステータスで絞り込む。
+     *
+     * @return View
+     */
     public function index(): View
     {
         $currentStatus = request('status');
@@ -29,6 +36,11 @@ class ReadingPlanController extends Controller
         ));
     }
 
+    /**
+     * 読書計画の登録画面を表示する。
+     *
+     * @return View
+     */
     public function create(): View
     {
         $books = Book::orderBy('title')->get();
@@ -36,6 +48,12 @@ class ReadingPlanController extends Controller
         return view('reading-plans.create', compact('books'));
     }
 
+    /**
+     * 新しい読書計画を登録する。
+     *
+     * @param ReadingPlanRequest $request
+     * @return RedirectResponse
+     */
     public function store(ReadingPlanRequest $request): RedirectResponse
     {
         $validated = $request->validated();
@@ -52,6 +70,12 @@ class ReadingPlanController extends Controller
             ->with('success', '読書計画を登録しました');
     }
 
+    /**
+     * 指定した読書計画の編集画面を表示する。
+     *
+     * @param ReadingPlan $readingPlan
+     * @return View
+     */
     public function edit(ReadingPlan $readingPlan): View
     {
         $this->authorize('update', $readingPlan);
@@ -59,8 +83,17 @@ class ReadingPlanController extends Controller
         return view('reading-plans.edit', compact('readingPlan'));
     }
 
-    public function update(ReadingPlanRequest $request, ReadingPlan $readingPlan): RedirectResponse
-    {
+    /**
+     * 指定した読書計画を更新する。
+     *
+     * @param ReadingPlanRequest $request
+     * @param ReadingPlan $readingPlan
+     * @return RedirectResponse
+     */
+    public function update(
+        ReadingPlanRequest $request,
+        ReadingPlan $readingPlan
+    ): RedirectResponse {
         $this->authorize('update', $readingPlan);
 
         $validated = $request->validated();
@@ -74,6 +107,12 @@ class ReadingPlanController extends Controller
             ->with('success', '読書計画を更新しました');
     }
 
+    /**
+     * 指定した読書計画を読了状態に更新する。
+     *
+     * @param ReadingPlan $readingPlan
+     * @return RedirectResponse
+     */
     public function complete(ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('complete', $readingPlan);
@@ -94,6 +133,12 @@ class ReadingPlanController extends Controller
             ->with('success', '読書計画を読了しました');
     }
 
+    /**
+     * 指定した読書計画を削除する。
+     *
+     * @param ReadingPlan $readingPlan
+     * @return RedirectResponse
+     */
     public function destroy(ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('delete', $readingPlan);

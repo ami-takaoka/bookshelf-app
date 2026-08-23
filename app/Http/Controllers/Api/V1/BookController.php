@@ -9,14 +9,23 @@ use App\Http\Resources\BookDetailResource;
 use App\Http\Resources\BookResource;
 use App\Http\Resources\BookStoreResource;
 use App\Models\Book;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 書籍一覧を取得する。
+     *
+     * キーワードとジャンルによる絞り込みに対応し、
+     * レビュー件数と平均評価を含めてページネーションで返す。
+     *
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Book::with('genres')
             ->withCount('reviews')
@@ -45,22 +54,23 @@ class BookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 新しい書籍を登録する。
+     *
+     * 認証ユーザーを登録者として設定し、指定されたジャンルを紐付ける。
+     *
+     * @param BookRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(BookRequest $request)
+    public function store(BookRequest $request): JsonResponse
     {
         $validated = $request->validated();
-
         $validated['user_id'] = $request->user()->id;
 
         $genres = $validated['genres'];
-
         unset($validated['genres']);
 
         $book = Book::create($validated);
-
         $book->genres()->attach($genres);
-
         $book->load('genres');
 
         return (new BookStoreResource($book))
@@ -69,7 +79,12 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 指定した書籍の詳細を取得する。
+     *
+     * ジャンルとレビュー投稿者の情報を含めて返す。
+     *
+     * @param Book $book
+     * @return BookDetailResource
      */
     public function show(Book $book): BookDetailResource
     {
@@ -82,24 +97,28 @@ class BookController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 指定した書籍を更新する。
+     *
+     * 書籍の所有者のみ更新でき、ジャンルの紐付けも更新する。
+     *
+     * @param BookUpdateRequest $request
+     * @param Book $book
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(BookUpdateRequest $request, Book $book)
-    {
+    public function update(
+        BookUpdateRequest $request,
+        Book $book
+    ): JsonResponse {
         $this->authorize('update', $book);
 
         $validated = $request->validated();
-
         $validated['user_id'] = $request->user()->id;
 
         $genres = $validated['genres'];
-
         unset($validated['genres']);
 
         $book->update($validated);
-
         $book->genres()->sync($genres);
-
         $book->load('genres');
 
         return (new BookStoreResource($book))
@@ -108,9 +127,14 @@ class BookController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 指定した書籍を削除する。
+     *
+     * 書籍の所有者のみ削除できる。
+     *
+     * @param Book $book
+     * @return Response
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): Response
     {
         $this->authorize('delete', $book);
 
