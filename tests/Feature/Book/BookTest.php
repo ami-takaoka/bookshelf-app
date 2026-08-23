@@ -208,7 +208,7 @@ class BookTest extends TestCase
         $response->assertSessionHasErrors('author');
     }
 
-    public function test_book_cannot_be_created_without_isbn(): void
+    public function test_book_can_be_created_without_isbn(): void
     {
         $user = User::factory()->create();
         $genre = Genre::factory()->create();
@@ -223,10 +223,16 @@ class BookTest extends TestCase
             'genres' => [$genre->id],
         ]);
 
-        $response->assertSessionHasErrors('isbn');
+        $response->assertRedirect(route('books.index'));
+
+        $this->assertDatabaseHas('books', [
+            'title' => 'Laravel入門',
+            'author' => '山田太郎',
+            'isbn' => null,
+        ]);
     }
 
-    public function test_book_cannot_be_created_without_published_date(): void
+    public function test_book_can_be_created_without_published_date(): void
     {
         $user = User::factory()->create();
         $genre = Genre::factory()->create();
@@ -241,7 +247,12 @@ class BookTest extends TestCase
             'genres' => [$genre->id],
         ]);
 
-        $response->assertSessionHasErrors('published_date');
+        $response->assertRedirect(route('books.index'));
+
+        $this->assertDatabaseHas('books', [
+            'title' => 'Laravel入門',
+            'published_date' => null,
+        ]);
     }
 
     public function test_book_cannot_be_created_without_genres(): void
@@ -602,13 +613,14 @@ class BookTest extends TestCase
         $response->assertSessionHasErrors('author');
     }
 
-    public function test_book_cannot_be_updated_without_isbn(): void
+    public function test_book_can_be_updated_without_isbn(): void
     {
         $user = User::factory()->create();
         $genre = Genre::factory()->create();
 
         $book = Book::factory()->create([
             'user_id' => $user->id,
+            'isbn' => '9781234567890',
         ]);
 
         $response = $this->actingAs($user)
@@ -622,10 +634,15 @@ class BookTest extends TestCase
                 'genres' => [$genre->id],
             ]);
 
-        $response->assertSessionHasErrors('isbn');
+        $response->assertRedirect(route('books.show', $book));
+
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+            'isbn' => null,
+        ]);
     }
 
-    public function test_book_cannot_be_updated_without_published_date(): void
+    public function test_book_can_be_updated_without_published_date(): void
     {
         $user = User::factory()->create();
         $genre = Genre::factory()->create();
@@ -645,7 +662,12 @@ class BookTest extends TestCase
                 'genres' => [$genre->id],
             ]);
 
-        $response->assertSessionHasErrors('published_date');
+        $response->assertRedirect(route('books.show', $book));
+
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+            'published_date' => null,
+        ]);
     }
 
     public function test_book_cannot_be_updated_without_genres(): void
