@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -63,8 +64,13 @@ class BookController extends Controller
         $genres = $validated['genres'];
         unset($validated['genres']);
 
-        $book = Book::create($validated);
-        $book->genres()->attach($genres);
+        $book = DB::transaction(function () use ($validated, $genres): Book {
+            $book = Book::create($validated);
+            $book->genres()->attach($genres);
+
+            return $book;
+        });
+
         $book->load('genres');
 
         return (new BookStoreResource($book))
@@ -100,12 +106,14 @@ class BookController extends Controller
 
         $validated = $request->validated();
         $validated['user_id'] = $request->user()->id;
-
         $genres = $validated['genres'];
         unset($validated['genres']);
 
-        $book->update($validated);
-        $book->genres()->sync($genres);
+        DB::transaction(function () use ($book, $validated, $genres): void {
+            $book->update($validated);
+            $book->genres()->sync($genres);
+        });
+
         $book->load('genres');
 
         return (new BookStoreResource($book))
