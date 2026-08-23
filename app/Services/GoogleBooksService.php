@@ -18,6 +18,7 @@ class GoogleBooksService
             'https://www.googleapis.com/books/v1/volumes',
             [
                 'q' => 'isbn:'.$isbn,
+                'key' => config('services.google_books.api_key'),
             ]
         );
 
