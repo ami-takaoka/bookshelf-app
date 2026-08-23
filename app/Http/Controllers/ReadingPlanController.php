@@ -79,7 +79,9 @@ class ReadingPlanController extends Controller
         $this->authorize('complete', $readingPlan);
 
         if ($readingPlan->status === ReadingPlanStatus::Completed) {
-            abort(403);
+            return redirect()
+                ->route('reading-plans.index')
+                ->with('error', 'この読書計画はすでに読了しています。');
         }
 
         $readingPlan->update([

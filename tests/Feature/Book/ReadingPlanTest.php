@@ -225,6 +225,37 @@ class ReadingPlanTest extends TestCase
     }
 
     // PLAN-09
+    public function test_completed_reading_plan_cannot_be_completed_again(): void
+    {
+        $user = User::factory()->create();
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+            'status' => ReadingPlanStatus::Completed,
+            'completed_at' => now()->subDay(),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->post(route('reading-plans.complete', $readingPlan));
+
+        $response->assertRedirect(route('reading-plans.index'));
+
+        $response->assertSessionHas(
+            'error',
+            'この読書計画はすでに読了しています。'
+        );
+
+        $this->assertDatabaseHas('reading_plans', [
+            'id' => $readingPlan->id,
+            'status' => ReadingPlanStatus::Completed->value,
+        ]);
+
+        $readingPlan->refresh();
+
+        $this->assertNotNull($readingPlan->completed_at);
+    }
+
+    // PLAN-10
     public function test_user_cannot_complete_another_users_reading_plan(): void
     {
         $user = User::factory()->create();
@@ -241,7 +272,7 @@ class ReadingPlanTest extends TestCase
         $response->assertForbidden();
     }
 
-    // PLAN-10
+    // PLAN-11
     public function test_authenticated_user_can_view_reading_plan_create_form(): void
     {
         $user = User::factory()->create();
@@ -253,7 +284,7 @@ class ReadingPlanTest extends TestCase
         $response->assertViewIs('reading-plans.create');
     }
 
-    // PLAN-11
+    // PLAN-12
     public function test_authenticated_user_can_create_reading_plan(): void
     {
         $user = User::factory()->create();
@@ -281,7 +312,7 @@ class ReadingPlanTest extends TestCase
         ]);
     }
 
-    // PLAN-12
+    // PLAN-13
     public function test_cannot_create_duplicate_pending_reading_plan_for_same_book(): void
     {
         $user = User::factory()->create();
@@ -306,7 +337,7 @@ class ReadingPlanTest extends TestCase
         $this->assertDatabaseCount('reading_plans', 1);
     }
 
-    // PLAN-13
+    // PLAN-14
     public function test_can_create_new_reading_plan_for_completed_book(): void
     {
         $user = User::factory()->create();
@@ -343,7 +374,7 @@ class ReadingPlanTest extends TestCase
         $this->assertDatabaseCount('reading_plans', 2);
     }
 
-    // PLAN-14
+    // PLAN-15
     public function test_authenticated_user_can_delete_reading_plan(): void
     {
         $user = User::factory()->create();
@@ -367,7 +398,7 @@ class ReadingPlanTest extends TestCase
         ]);
     }
 
-    // PLAN-15
+    // PLAN-16
     public function test_user_cannot_delete_another_users_reading_plan(): void
     {
         $user = User::factory()->create();
