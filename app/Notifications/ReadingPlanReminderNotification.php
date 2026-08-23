@@ -11,7 +11,7 @@ class ReadingPlanReminderNotification extends Notification
     use Queueable;
 
     /**
-     * Create a new notification instance.
+     * 新しい通知インスタンスを生成する。
      */
     public function __construct(
         private ReadingPlan $readingPlan,
@@ -19,9 +19,7 @@ class ReadingPlanReminderNotification extends Notification
     ) {}
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
+     * 通知の配信チャンネルを定義する。
      */
     public function via(object $notifiable): array
     {
@@ -29,9 +27,7 @@ class ReadingPlanReminderNotification extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
+     * データベースに保存する通知データを配列として返す。
      */
     public function toArray(object $notifiable): array
     {
@@ -43,6 +39,9 @@ class ReadingPlanReminderNotification extends Notification
         ];
     }
 
+    /**
+     * 通知本文を生成する。
+     */
     private function createBody(): string
     {
         $title = $this->readingPlan->book->title;

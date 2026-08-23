@@ -25,7 +25,7 @@ class SendReadingPlanReminders extends Command
     protected $description = '読書計画の期限切れ更新とリマインダー通知を実行する';
 
     /**
-     * Execute the console command.
+     * 読書計画の期限切れ更新とリマインダー通知を実行する。
      */
     public function handle(): int
     {

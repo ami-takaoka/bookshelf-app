@@ -5,19 +5,15 @@ namespace App\Services;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
-/**
- * Google Books APIから書籍情報を取得する
- *
- * @param  string  $isbn
- * @return array
- *
- * @throws Exception
- */
 class GoogleBooksService
 {
+    /**
+     * ISBNから書籍情報を検索する。
+     *
+     * @throws Exception
+     */
     public function search(string $isbn): array
     {
-
         $response = Http::get(
             'https://www.googleapis.com/books/v1/volumes',
             [
