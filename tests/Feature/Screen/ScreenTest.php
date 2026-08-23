@@ -12,6 +12,11 @@ class ScreenTest extends TestCase
 {
     use RefreshDatabase;
 
+    // =========================
+    // 画面アクセス
+    // =========================
+
+    // SCREEN-01
     public function test_books_index_can_be_rendered(): void
     {
         Book::factory()->create([
@@ -60,6 +65,7 @@ class ScreenTest extends TestCase
         $response->assertSee('とても面白い本でした。');
     }
 
+    // SCREEN-03
     public function test_ranking_screen_can_be_rendered(): void
     {
         // ランキング対象の書籍
