@@ -75,6 +75,34 @@ class MyReadingReportTest extends TestCase
         $response->assertSee('-');
     }
 
+    // REPORT-02 補足　同じ書籍への複数レビューは1冊として集計される
+    public function test_read_books_are_counted_without_duplicate_book_ids(): void
+    {
+        $user = User::factory()->create();
+
+        $book = Book::factory()->create();
+
+        Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'rating' => 5,
+        ]);
+
+        Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'rating' => 3,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('reports.index'));
+
+        $response->assertStatus(200);
+
+        // 同じ書籍に2件レビューしても、読了冊数は1冊
+        $response->assertSee('1');
+    }
+
     // REPORT-03
     public function test_rating_distribution_is_displayed(): void
     {
