@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ReviewRequest $request, Book $book)
-    {
+    public function store(
+        ReviewRequest $request,
+        Book $book
+    ): RedirectResponse {
         Review::create([
             'user_id' => auth()->id(),
             'book_id' => $book->id,
@@ -28,7 +32,7 @@ class ReviewController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Review $review)
+    public function edit(Review $review): View
     {
         $this->authorize('update', $review);
 
@@ -38,8 +42,10 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ReviewRequest $request, Review $review)
-    {
+    public function update(
+        ReviewRequest $request,
+        Review $review
+    ): RedirectResponse {
         $this->authorize('update', $review);
 
         $review->update([
@@ -55,7 +61,7 @@ class ReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Review $review)
+    public function destroy(Review $review): RedirectResponse
     {
         $this->authorize('delete', $review);
 

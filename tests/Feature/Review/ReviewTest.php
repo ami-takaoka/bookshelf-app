@@ -351,7 +351,7 @@ class ReviewTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertSee(
-            'href="' . route('books.show', $book) . '"',
+            'href="'.route('books.show', $book).'"',
             false
         );
     }
