@@ -8,6 +8,9 @@ use Illuminate\View\View;
 
 class FavoriteController extends Controller
 {
+    /**
+     * ログインユーザーのお気に入り状態を切り替える。
+     */
     public function toggle(Book $book): RedirectResponse
     {
         auth()->user()->favoriteBooks()->toggle($book->id);
@@ -15,6 +18,9 @@ class FavoriteController extends Controller
         return back();
     }
 
+    /**
+     * ログインユーザーのお気に入り書籍一覧を表示する。
+     */
     public function index(): View
     {
         $books = auth()->user()

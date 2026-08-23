@@ -9,14 +9,19 @@ use App\Models\Genre;
 use App\Services\GoogleBooksService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 書籍一覧を表示する。
+     *
+     * キーワード、ジャンル、並び順による絞り込みに対応する。
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $genres = Genre::all();
 
@@ -33,9 +38,9 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 書籍登録画面を表示する。
      */
-    public function create()
+    public function create(): View
     {
         $genres = Genre::all();
 
@@ -43,21 +48,23 @@ class BookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 書籍を登録する。
      */
-    public function store(BookRequest $request)
+    public function store(BookRequest $request): RedirectResponse
     {
-        $book = Book::create([
-            'user_id' => auth()->id(),
-            'title' => $request->title,
-            'author' => $request->author,
-            'isbn' => $request->isbn,
-            'published_date' => $request->published_date,
-            'description' => $request->description,
-            'image_url' => $request->image_url,
-        ]);
+        DB::transaction(function () use ($request): void {
+            $book = Book::create([
+                'user_id' => auth()->id(),
+                'title' => $request->title,
+                'author' => $request->author,
+                'isbn' => $request->isbn,
+                'published_date' => $request->published_date,
+                'description' => $request->description,
+                'image_url' => $request->image_url,
+            ]);
 
-        $book->genres()->sync($request->genres);
+            $book->genres()->sync($request->genres);
+        });
 
         return redirect()
             ->route('books.index')
@@ -65,9 +72,11 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 書籍詳細を表示する。
+     *
+     * ジャンル、レビュー、レビューへのいいね情報を読み込む。
      */
-    public function show(Book $book)
+    public function show(Book $book): View
     {
         $book->load([
             'genres',
@@ -79,9 +88,9 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 書籍編集画面を表示する。
      */
-    public function edit(Book $book)
+    public function edit(Book $book): View
     {
         $this->authorize('update', $book);
 
@@ -91,22 +100,26 @@ class BookController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 書籍を更新する。
      */
-    public function update(BookRequest $request, Book $book)
-    {
+    public function update(
+        BookRequest $request,
+        Book $book
+    ): RedirectResponse {
         $this->authorize('update', $book);
 
-        $book->update([
-            'title' => $request->title,
-            'author' => $request->author,
-            'isbn' => $request->isbn,
-            'published_date' => $request->published_date,
-            'description' => $request->description,
-            'image_url' => $request->image_url,
-        ]);
+        DB::transaction(function () use ($request, $book): void {
+            $book->update([
+                'title' => $request->title,
+                'author' => $request->author,
+                'isbn' => $request->isbn,
+                'published_date' => $request->published_date,
+                'description' => $request->description,
+                'image_url' => $request->image_url,
+            ]);
 
-        $book->genres()->sync($request->genres);
+            $book->genres()->sync($request->genres);
+        });
 
         return redirect()
             ->route('books.show', $book)
@@ -114,9 +127,9 @@ class BookController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 書籍を削除する。
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book): RedirectResponse
     {
         $this->authorize('delete', $book);
 
@@ -128,7 +141,7 @@ class BookController extends Controller
     }
 
     /**
-     * ISBNからGoogle Books APIで書籍情報を取得する
+     * ISBNからGoogle Books APIで書籍情報を取得する。
      */
     public function searchIsbn(
         IsbnSearchRequest $request,

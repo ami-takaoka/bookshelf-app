@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * リクエストの実行を許可する。
      */
     public function authorize(): bool
     {
@@ -16,7 +16,9 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * ログイン時のバリデーションルールを定義する。
+     *
+     * メールアドレスとパスワードを必須項目として検証する。
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -29,14 +31,15 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get custom error messages for validator errors.
+     * バリデーションエラーメッセージを定義する。
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
         return [
             'email.required' => 'メールアドレスを入力してください',
             'email.email' => 'メールアドレスはメール形式で入力してください',
-
             'password.required' => 'パスワードを入力してください',
         ];
     }

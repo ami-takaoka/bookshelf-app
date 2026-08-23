@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\View\View;
 
 class NotificationController extends Controller
 {
-    public function index()
+    /**
+     * ログインユーザーの通知一覧を表示する。
+     */
+    public function index(): View
     {
         $notifications = auth()->user()
             ->notifications()
@@ -16,7 +21,10 @@ class NotificationController extends Controller
         return view('notifications.index', compact('notifications'));
     }
 
-    public function read(DatabaseNotification $notification)
+    /**
+     * 指定した通知を既読にする。
+     */
+    public function read(DatabaseNotification $notification): RedirectResponse
     {
         $this->authorize('read', $notification);
 

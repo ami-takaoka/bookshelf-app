@@ -197,6 +197,21 @@ Seeder実行後、以下のアカウントでログインできます。
 | PUT | `/api/v1/books/{book}` | 書籍を更新する | ★ Sanctum + BookPolicy（所有者のみ） |
 | DELETE | `/api/v1/books/{book}` | 書籍を削除する | ★ Sanctum + BookPolicy（所有者のみ） |
 
+書籍の新規登録・更新・削除APIにはLaravel Sanctumによる
+Bearerトークン認証を使用しています。
+
+1. `POST /api/v1/login` にメールアドレスとパスワードを送信してトークンを取得
+2. 取得したトークンを以下の形式でAuthorizationヘッダーに付与
+
+```text
+Authorization: Bearer {token}
+```
+
+3. 書籍の更新・削除では、認証ユーザーが書籍の所有者であることを
+BookPolicyで確認します。
+
+※認証トークンはログイン時に発行されるため、READMEやソースコードには記載しません。
+
 ## テスト
 
 PHPUnitを使用しています。

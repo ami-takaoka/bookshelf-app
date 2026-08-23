@@ -8,7 +8,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class GenreResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * ジャンルのリソースを配列に変換する。
+     *
+     * ジャンルのIDと名称を返す。
      *
      * @return array<string, mixed>
      */

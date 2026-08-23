@@ -8,7 +8,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class BookStoreResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * 書籍登録・更新時のリソースを配列に変換する。
+     *
+     * 登録・更新した書籍の基本情報とジャンルを返す。
      *
      * @return array<string, mixed>
      */

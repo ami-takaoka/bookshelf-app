@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class IsbnSearchRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * リクエストの実行を許可する。
      */
     public function authorize(): bool
     {
@@ -16,7 +16,7 @@ class IsbnSearchRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * ISBN検索時のバリデーションルールを定義する。
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -27,6 +27,11 @@ class IsbnSearchRequest extends FormRequest
         ];
     }
 
+    /**
+     * バリデーションエラーメッセージを定義する。
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
@@ -36,7 +41,7 @@ class IsbnSearchRequest extends FormRequest
     }
 
     /**
-     * バリデーション前にルートパラメータのISBNをリクエストへマージする
+     * バリデーション前にルートパラメータのISBNをリクエストへマージする。
      */
     protected function prepareForValidation(): void
     {

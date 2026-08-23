@@ -13,6 +13,9 @@ class AuthController extends Controller
 {
     /**
      * APIトークンを発行する。
+     *
+     * 認証情報を検証し、認証に成功したユーザーに
+     * SanctumのAPIトークンを発行する。
      */
     public function login(LoginRequest $request): JsonResponse
     {

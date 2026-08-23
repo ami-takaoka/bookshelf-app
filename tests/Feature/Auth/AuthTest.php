@@ -158,7 +158,7 @@ class AuthTest extends TestCase
     // AUTH-10
     public function test_registration_requires_email_within_255_characters(): void
     {
-        $email = str_repeat('a', 244) . '@example.com';
+        $email = str_repeat('a', 244).'@example.com';
 
         $response = $this->post('/register', [
             'name' => 'テストユーザー',

@@ -7,6 +7,12 @@ use Illuminate\View\View;
 
 class ReportController extends Controller
 {
+    /**
+     * ログインユーザーの読書レポートを表示する。
+     *
+     * レビューをもとに、総合サマリー、評価分布、
+     * 高評価書籍、ジャンル別評価を集計する。
+     */
     public function index(): View
     {
         $reviews = Review::where('user_id', auth()->id());

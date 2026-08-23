@@ -90,7 +90,7 @@ class FavoriteTest extends TestCase
 
         foreach ($books as $index => $book) {
             $book->update([
-                'title' => 'お気に入り確認用書籍' . ($index + 1),
+                'title' => 'お気に入り確認用書籍'.($index + 1),
             ]);
 
             $user->favoriteBooks()->attach($book->id);

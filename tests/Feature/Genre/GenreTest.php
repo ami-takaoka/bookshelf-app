@@ -138,7 +138,7 @@ class GenreTest extends TestCase
 
         foreach ($books as $index => $book) {
             $book->update([
-                'title' => 'ジャンル確認用書籍_' . ($index + 1),
+                'title' => 'ジャンル確認用書籍_'.($index + 1),
             ]);
 
             $genre->books()->attach($book->id);

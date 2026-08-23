@@ -8,12 +8,19 @@ use Illuminate\Validation\Rule;
 
 class GenreRequest extends FormRequest
 {
+    /**
+     * リクエストの実行を許可する。
+     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
+     * ジャンル登録・更新時のバリデーションルールを定義する。
+     *
+     * 更新時は、対象ジャンル自身を除外してジャンル名の一意性を検証する。
+     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -30,6 +37,11 @@ class GenreRequest extends FormRequest
         ];
     }
 
+    /**
+     * バリデーションエラーメッセージを定義する。
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [

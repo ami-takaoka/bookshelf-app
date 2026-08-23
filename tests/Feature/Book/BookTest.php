@@ -345,8 +345,7 @@ class BookTest extends TestCase
 
         $response->assertSessionHas(
             'errors',
-            fn ($errors) =>
-                $errors->get('title')[0] === 'タイトルは文字列で入力してください'
+            fn ($errors) => $errors->get('title')[0] === 'タイトルは文字列で入力してください'
                 && $errors->get('author')[0] === '著者は文字列で入力してください'
                 && $errors->get('isbn')[0] === 'ISBNは13桁で入力してください'
                 && $errors->get('published_date')[0] === '出版日は日付形式で入力してください'
@@ -380,8 +379,7 @@ class BookTest extends TestCase
 
         $response->assertSessionHas(
             'errors',
-            fn ($errors) =>
-                $errors->get('title')[0] === 'タイトルは255文字以内で入力してください'
+            fn ($errors) => $errors->get('title')[0] === 'タイトルは255文字以内で入力してください'
                 && $errors->get('author')[0] === '著者は100文字以内で入力してください'
                 && $errors->get('description')[0] === '説明は1000文字以内で入力してください'
         );
@@ -773,8 +771,7 @@ class BookTest extends TestCase
 
         $response->assertSessionHas(
             'errors',
-            fn ($errors) =>
-                $errors->get('title')[0] === 'タイトルは文字列で入力してください'
+            fn ($errors) => $errors->get('title')[0] === 'タイトルは文字列で入力してください'
                 && $errors->get('author')[0] === '著者は文字列で入力してください'
                 && $errors->get('isbn')[0] === 'ISBNは13桁で入力してください'
                 && $errors->get('published_date')[0] === '出版日は日付形式で入力してください'
@@ -812,8 +809,7 @@ class BookTest extends TestCase
 
         $response->assertSessionHas(
             'errors',
-            fn ($errors) =>
-                $errors->get('title')[0] === 'タイトルは255文字以内で入力してください'
+            fn ($errors) => $errors->get('title')[0] === 'タイトルは255文字以内で入力してください'
                 && $errors->get('author')[0] === '著者は100文字以内で入力してください'
                 && $errors->get('description')[0] === '説明は1000文字以内で入力してください'
         );

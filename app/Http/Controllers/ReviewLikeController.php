@@ -7,6 +7,9 @@ use Illuminate\Http\RedirectResponse;
 
 class ReviewLikeController extends Controller
 {
+    /**
+     * ログインユーザーのレビューへのいいね状態を切り替える。
+     */
     public function toggle(Review $review): RedirectResponse
     {
         auth()->user()->likedReviews()->toggle($review->id);
