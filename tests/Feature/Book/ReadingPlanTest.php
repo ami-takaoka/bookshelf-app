@@ -417,4 +417,169 @@ class ReadingPlanTest extends TestCase
             'id' => $readingPlan->id,
         ]);
     }
+
+    // PLAN-17
+    public function test_guest_is_redirected_to_login_when_accessing_create_page(): void
+    {
+        $response = $this->get(route('reading-plans.create'));
+
+        $response->assertRedirect(route('login'));
+    }
+
+    // PLAN-18
+    public function test_guest_is_redirected_to_login_when_accessing_edit_page(): void
+    {
+        $readingPlan = ReadingPlan::factory()->create();
+
+        $response = $this->get(route('reading-plans.edit', $readingPlan));
+
+        $response->assertRedirect(route('login'));
+    }
+
+    // PLAN-19
+    public function test_guest_is_redirected_to_login_when_deleting_reading_plan(): void
+    {
+        $readingPlan = ReadingPlan::factory()->create();
+
+        $response = $this->delete(
+            route('reading-plans.destroy', $readingPlan)
+        );
+
+        $response->assertRedirect(route('login'));
+
+        $this->assertDatabaseHas('reading_plans', [
+            'id' => $readingPlan->id,
+        ]);
+    }
+
+    // PLAN-20
+    public function test_cannot_create_reading_plan_with_past_date(): void
+    {
+        $user = User::factory()->create();
+        $book = Book::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('reading-plans.store'), [
+                'book_id' => $book->id,
+                'target_date' => now()->subDay()->toDateString(),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'target_date' => '期日は本日以降の日付を入力してください',
+        ]);
+
+        $this->assertDatabaseMissing('reading_plans', [
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
+    }
+
+    // PLAN-21
+    public function test_completed_reading_plan_cannot_be_edited(): void
+    {
+        $user = User::factory()->create();
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+            'status' => ReadingPlanStatus::Completed,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('reading-plans.edit', $readingPlan));
+
+        $response->assertForbidden();
+    }
+
+    // PLAN-22
+    public function test_create_page_cancel_redirects_to_reading_plan_index(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->get(route('reading-plans.create'));
+
+        $response->assertStatus(200);
+        $response->assertSee(
+            route('reading-plans.index'),
+            false
+        );
+    }
+
+    // PLAN-23
+    public function test_edit_page_cancel_redirects_to_reading_plan_index(): void
+    {
+        $user = User::factory()->create();
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+            'status' => ReadingPlanStatus::Pending,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('reading-plans.edit', $readingPlan));
+
+        $response->assertStatus(200);
+        $response->assertSee(
+            route('reading-plans.index'),
+            false
+        );
+    }
+
+    // PLAN-24
+    public function test_cannot_create_reading_plan_without_book(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('reading-plans.store'), [
+                'book_id' => '',
+                'target_date' => now()->addWeek()->toDateString(),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'book_id' => '書籍を選択してください',
+        ]);
+
+        $this->assertDatabaseCount('reading_plans', 0);
+    }
+
+    // PLAN-25
+    public function test_cannot_create_reading_plan_without_target_date(): void
+    {
+        $user = User::factory()->create();
+        $book = Book::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('reading-plans.store'), [
+                'book_id' => $book->id,
+                'target_date' => '',
+            ]);
+
+        $response->assertSessionHasErrors([
+            'target_date' => '期日を入力してください',
+        ]);
+
+        $this->assertDatabaseMissing('reading_plans', [
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
+    }
+
+    // PLAN-26
+    public function test_cannot_create_reading_plan_with_non_existent_book(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('reading-plans.store'), [
+                'book_id' => 999999,
+                'target_date' => now()->addWeek()->toDateString(),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'book_id' => '選択した書籍が存在しません',
+        ]);
+
+        $this->assertDatabaseCount('reading_plans', 0);
+    }
 }

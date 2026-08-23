@@ -120,4 +120,54 @@ class ReadingPlanDateTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    // PLAN-DATE-05
+    public function test_cannot_update_reading_plan_without_target_date(): void
+    {
+        $user = User::factory()->create();
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+            'target_date' => '2026-08-25',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->put(route('reading-plans.update', $readingPlan), [
+                'target_date' => '',
+            ]);
+
+        $response->assertSessionHasErrors([
+            'target_date' => '期日を入力してください',
+        ]);
+
+        $this->assertDatabaseHas('reading_plans', [
+            'id' => $readingPlan->id,
+            'target_date' => '2026-08-25',
+        ]);
+    }
+
+    // PLAN-DATE-06
+    public function test_cannot_update_reading_plan_with_invalid_date_format(): void
+    {
+        $user = User::factory()->create();
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+            'target_date' => '2026-08-25',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->put(route('reading-plans.update', $readingPlan), [
+                'target_date' => 'invalid-date',
+            ]);
+
+        $response->assertSessionHasErrors([
+            'target_date' => '期日は日付形式で入力してください',
+        ]);
+
+        $this->assertDatabaseHas('reading_plans', [
+            'id' => $readingPlan->id,
+            'target_date' => '2026-08-25',
+        ]);
+    }
 }
