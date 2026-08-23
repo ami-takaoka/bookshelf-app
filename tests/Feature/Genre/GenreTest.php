@@ -234,6 +234,25 @@ class GenreTest extends TestCase
         $response->assertStatus(200);
     }
 
+    // GENRE-25
+    public function test_genre_name_must_not_exceed_50_characters_when_creating_genre(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('genres.store'), [
+                'name' => str_repeat('あ', 51),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'name' => 'ジャンル名は50文字以内で入力してください',
+        ]);
+
+        $this->assertDatabaseMissing('genres', [
+            'name' => str_repeat('あ', 51),
+        ]);
+    }
+
     // =========================
     // ジャンル編集
     // =========================
@@ -348,6 +367,27 @@ class GenreTest extends TestCase
         $response->assertNotFound();
     }
 
+    // GENRE-26
+    public function test_genre_name_must_not_exceed_50_characters_when_updating_genre(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->put(route('genres.update', $genre), [
+                'name' => str_repeat('あ', 51),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'name' => 'ジャンル名は50文字以内で入力してください',
+        ]);
+
+        $this->assertDatabaseHas('genres', [
+            'id' => $genre->id,
+            'name' => $genre->name,
+        ]);
+    }
+
     // =========================
     // ジャンル削除
     // =========================
@@ -420,45 +460,5 @@ class GenreTest extends TestCase
             ->delete(route('genres.destroy', 9999));
 
         $response->assertNotFound();
-    }
-
-    // GENRE-25
-    public function test_genre_name_must_not_exceed_50_characters_when_creating_genre(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)
-            ->post(route('genres.store'), [
-                'name' => str_repeat('あ', 51),
-            ]);
-
-        $response->assertSessionHasErrors([
-            'name' => 'ジャンル名は50文字以内で入力してください',
-        ]);
-
-        $this->assertDatabaseMissing('genres', [
-            'name' => str_repeat('あ', 51),
-        ]);
-    }
-
-    // GENRE-26
-    public function test_genre_name_must_not_exceed_50_characters_when_updating_genre(): void
-    {
-        $user = User::factory()->create();
-        $genre = Genre::factory()->create();
-
-        $response = $this->actingAs($user)
-            ->put(route('genres.update', $genre), [
-                'name' => str_repeat('あ', 51),
-            ]);
-
-        $response->assertSessionHasErrors([
-            'name' => 'ジャンル名は50文字以内で入力してください',
-        ]);
-
-        $this->assertDatabaseHas('genres', [
-            'id' => $genre->id,
-            'name' => $genre->name,
-        ]);
     }
 }
