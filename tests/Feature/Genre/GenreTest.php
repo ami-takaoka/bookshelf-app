@@ -136,17 +136,19 @@ class GenreTest extends TestCase
 
         $books = Book::factory()->count(11)->create();
 
-        foreach ($books as $book) {
-            $book->genres()->attach($genre);
+        foreach ($books as $index => $book) {
+            $book->update([
+                'title' => 'ジャンル確認用書籍_' . ($index + 1),
+            ]);
+
+            $genre->books()->attach($book->id);
         }
 
         $response = $this->actingAs($user)
-            ->get(route('genres.show', ['genre' => $genre, 'page' => 2]));
+            ->get(route('genres.show', [$genre, 'page' => 2]));
 
         $response->assertStatus(200);
-
-        $response->assertSee($books->last()->title);
-        $response->assertDontSee($books->first()->title);
+        $response->assertSee('ジャンル確認用書籍_11');
     }
 
     // GENRE-08
@@ -418,5 +420,45 @@ class GenreTest extends TestCase
             ->delete(route('genres.destroy', 9999));
 
         $response->assertNotFound();
+    }
+
+    // GENRE-25
+    public function test_genre_name_must_not_exceed_50_characters_when_creating_genre(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('genres.store'), [
+                'name' => str_repeat('あ', 51),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'name' => 'ジャンル名は50文字以内で入力してください',
+        ]);
+
+        $this->assertDatabaseMissing('genres', [
+            'name' => str_repeat('あ', 51),
+        ]);
+    }
+
+    // GENRE-26
+    public function test_genre_name_must_not_exceed_50_characters_when_updating_genre(): void
+    {
+        $user = User::factory()->create();
+        $genre = Genre::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->put(route('genres.update', $genre), [
+                'name' => str_repeat('あ', 51),
+            ]);
+
+        $response->assertSessionHasErrors([
+            'name' => 'ジャンル名は50文字以内で入力してください',
+        ]);
+
+        $this->assertDatabaseHas('genres', [
+            'id' => $genre->id,
+            'name' => $genre->name,
+        ]);
     }
 }
