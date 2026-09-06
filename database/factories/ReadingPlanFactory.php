@@ -15,7 +15,7 @@ class ReadingPlanFactory extends Factory
             'user_id' => User::factory(),
             'book_id' => Book::factory(),
             'target_date' => $this->faker->date(),
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
             'completed_at' => null,
         ];
     }

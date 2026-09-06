@@ -72,7 +72,7 @@ class ReadingPlanRequest extends FormRequest
             $exists = ReadingPlan::where('user_id', auth()->id())
                 ->where('book_id', $this->book_id)
                 ->whereIn('status', [
-                    ReadingPlanStatus::Pending,
+                    ReadingPlanStatus::InProgress,
                     ReadingPlanStatus::Expired,
                 ])
                 ->exists();

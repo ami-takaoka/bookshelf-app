@@ -39,7 +39,7 @@ class ExpireReadingPlansTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-17',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')
@@ -61,12 +61,12 @@ class ExpireReadingPlansTest extends TestCase
         $user = User::factory()->create();
         $book = Book::factory()->create();
 
-        // 期日内の未着手
-        $pendingPlan = ReadingPlan::factory()->create([
+        // 期日内の進行中
+        $inProgressPlan = ReadingPlan::factory()->create([
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-19',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         // 期日を過ぎているが読了済み
@@ -81,8 +81,8 @@ class ExpireReadingPlansTest extends TestCase
             ->assertSuccessful();
 
         $this->assertDatabaseHas('reading_plans', [
-            'id' => $pendingPlan->id,
-            'status' => ReadingPlanStatus::Pending->value,
+            'id' => $inProgressPlan->id,
+            'status' => ReadingPlanStatus::InProgress->value,
         ]);
 
         $this->assertDatabaseHas('reading_plans', [
