@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\ReadingPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\DatabaseNotification;
 use Tests\TestCase;
 
 class ReadingPlanTest extends TestCase
@@ -395,6 +396,46 @@ class ReadingPlanTest extends TestCase
 
         $this->assertDatabaseMissing('reading_plans', [
             'id' => $readingPlan->id,
+        ]);
+    }
+
+    // PLAN-15-1
+    public function test_related_reminder_notifications_are_deleted_with_reading_plan(): void
+    {
+        $user = User::factory()->create();
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        DatabaseNotification::create([
+            'id' => 'notification-reading-plan-1',
+            'type' => 'App\Notifications\ReadingPlanReminderNotification',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $user->id,
+            'data' => [
+                'title' => '読書リマインダー',
+                'body' => '読書予定日の通知です。',
+                'timing' => 'on_due_date',
+                'reading_plan_id' => $readingPlan->id,
+            ],
+        ]);
+
+        $response = $this->actingAs($user)
+            ->delete(route('reading-plans.destroy', $readingPlan));
+
+        $response->assertRedirect(route('reading-plans.index'))
+            ->assertSessionHas(
+                'success',
+                '読書計画を削除しました'
+            );
+
+        $this->assertDatabaseMissing('reading_plans', [
+            'id' => $readingPlan->id,
+        ]);
+
+        $this->assertDatabaseMissing('notifications', [
+            'id' => 'notification-reading-plan-1',
         ]);
     }
 

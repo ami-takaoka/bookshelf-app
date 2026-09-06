@@ -7,6 +7,8 @@ use App\Http\Requests\ReadingPlanRequest;
 use App\Models\Book;
 use App\Models\ReadingPlan;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ReadingPlanController extends Controller
@@ -124,7 +126,14 @@ class ReadingPlanController extends Controller
     {
         $this->authorize('delete', $readingPlan);
 
-        $readingPlan->delete();
+        DB::transaction(function () use ($readingPlan) {
+            DatabaseNotification::where(
+                'data->reading_plan_id',
+                $readingPlan->id
+            )->delete();
+
+            $readingPlan->delete();
+        });
 
         return redirect()
             ->route('reading-plans.index')
