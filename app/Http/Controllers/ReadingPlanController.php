@@ -55,7 +55,7 @@ class ReadingPlanController extends Controller
             'user_id' => auth()->id(),
             'book_id' => $validated['book_id'],
             'target_date' => $validated['target_date'],
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         return redirect()
@@ -80,6 +80,7 @@ class ReadingPlanController extends Controller
         ReadingPlanRequest $request,
         ReadingPlan $readingPlan
     ): RedirectResponse {
+
         $this->authorize('update', $readingPlan);
 
         $validated = $request->validated();

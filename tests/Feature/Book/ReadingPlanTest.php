@@ -49,8 +49,8 @@ class ReadingPlanTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $pendingBook = Book::factory()->create([
-            'title' => '未着手の書籍',
+        $inProgressBook = Book::factory()->create([
+            'title' => '進行中の書籍',
         ]);
 
         $completedBook = Book::factory()->create([
@@ -59,8 +59,8 @@ class ReadingPlanTest extends TestCase
 
         ReadingPlan::factory()->create([
             'user_id' => $user->id,
-            'book_id' => $pendingBook->id,
-            'status' => ReadingPlanStatus::Pending,
+            'book_id' => $inProgressBook->id,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         ReadingPlan::factory()->create([
@@ -71,11 +71,11 @@ class ReadingPlanTest extends TestCase
 
         $response = $this->actingAs($user)
             ->get(route('reading-plans.index', [
-                'status' => ReadingPlanStatus::Pending->value,
+                'status' => ReadingPlanStatus::InProgress->value,
             ]));
 
         $response->assertStatus(200);
-        $response->assertSee($pendingBook->title);
+        $response->assertSee($inProgressBook->title);
         $response->assertDontSee($completedBook->title);
     }
 
@@ -84,8 +84,8 @@ class ReadingPlanTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $pendingBook = Book::factory()->create([
-            'title' => '未着手の書籍',
+        $inProgressBook = Book::factory()->create([
+            'title' => '進行中の書籍',
         ]);
 
         $completedBook = Book::factory()->create([
@@ -98,8 +98,8 @@ class ReadingPlanTest extends TestCase
 
         ReadingPlan::factory()->create([
             'user_id' => $user->id,
-            'book_id' => $pendingBook->id,
-            'status' => ReadingPlanStatus::Pending,
+            'book_id' => $inProgressBook->id,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         ReadingPlan::factory()->create([
@@ -118,7 +118,7 @@ class ReadingPlanTest extends TestCase
             ->get(route('reading-plans.index'));
 
         $response->assertStatus(200);
-        $response->assertSee($pendingBook->title);
+        $response->assertSee($inProgressBook->title);
         $response->assertSee($completedBook->title);
         $response->assertSee($expiredBook->title);
     }
@@ -174,7 +174,7 @@ class ReadingPlanTest extends TestCase
 
         $readingPlan = ReadingPlan::factory()->create([
             'user_id' => $user->id,
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
             'completed_at' => null,
         ]);
 
@@ -263,7 +263,7 @@ class ReadingPlanTest extends TestCase
 
         $readingPlan = ReadingPlan::factory()->create([
             'user_id' => $otherUser->id,
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $response = $this->actingAs($user)
@@ -308,12 +308,12 @@ class ReadingPlanTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => $targetDate,
-            'status' => ReadingPlanStatus::Pending->value,
+            'status' => ReadingPlanStatus::InProgress->value,
         ]);
     }
 
     // PLAN-13
-    public function test_cannot_create_duplicate_pending_reading_plan_for_same_book(): void
+    public function test_cannot_create_duplicate_in_progress_reading_plan_for_same_book(): void
     {
         $user = User::factory()->create();
         $book = Book::factory()->create();
@@ -321,7 +321,7 @@ class ReadingPlanTest extends TestCase
         ReadingPlan::factory()->create([
             'user_id' => $user->id,
             'book_id' => $book->id,
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $response = $this->actingAs($user)
@@ -368,7 +368,7 @@ class ReadingPlanTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => $targetDate,
-            'status' => ReadingPlanStatus::Pending->value,
+            'status' => ReadingPlanStatus::InProgress->value,
         ]);
 
         $this->assertDatabaseCount('reading_plans', 2);
@@ -512,7 +512,7 @@ class ReadingPlanTest extends TestCase
 
         $readingPlan = ReadingPlan::factory()->create([
             'user_id' => $user->id,
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $response = $this->actingAs($user)

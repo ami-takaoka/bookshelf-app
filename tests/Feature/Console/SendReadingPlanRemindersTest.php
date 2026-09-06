@@ -43,7 +43,7 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-21',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')
@@ -77,7 +77,7 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-18',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')
@@ -111,7 +111,7 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-15',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')
@@ -141,7 +141,7 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-21',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $user->notify(
@@ -184,21 +184,21 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $threeDaysBeforeBook->id,
             'target_date' => '2026-08-21',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $dueDatePlan = ReadingPlan::factory()->create([
             'user_id' => $user->id,
             'book_id' => $dueDateBook->id,
             'target_date' => '2026-08-18',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $threeDaysAfterPlan = ReadingPlan::factory()->create([
             'user_id' => $user->id,
             'book_id' => $threeDaysAfterBook->id,
             'target_date' => '2026-08-15',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')
@@ -255,14 +255,14 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user1->id,
             'book_id' => $book1->id,
             'target_date' => '2026-08-21',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $readingPlan2 = ReadingPlan::factory()->create([
             'user_id' => $user2->id,
             'book_id' => $book2->id,
             'target_date' => '2026-08-21',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')
@@ -328,7 +328,7 @@ class SendReadingPlanRemindersTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => '2026-08-20',
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
         ]);
 
         $this->artisan('reading-plans:send-reminders')

@@ -36,7 +36,7 @@ class ReadingPlanSeeder extends Seeder
                 'user_id' => $yamada->id,
                 'book_id' => $books['9784101010014']->id,
                 'target_date' => today()->addDays(3),
-                'status' => ReadingPlanStatus::Pending,
+                'status' => ReadingPlanStatus::InProgress,
             ],
 
             // 山田太郎：当日通知対象
@@ -44,7 +44,7 @@ class ReadingPlanSeeder extends Seeder
                 'user_id' => $yamada->id,
                 'book_id' => $books['9784422100524']->id,
                 'target_date' => today(),
-                'status' => ReadingPlanStatus::Pending,
+                'status' => ReadingPlanStatus::InProgress,
             ],
 
             // 山田太郎：3日経過後通知対象
@@ -52,7 +52,7 @@ class ReadingPlanSeeder extends Seeder
                 'user_id' => $yamada->id,
                 'book_id' => $books['9784873115658']->id,
                 'target_date' => today()->subDays(3),
-                'status' => ReadingPlanStatus::Pending,
+                'status' => ReadingPlanStatus::InProgress,
             ],
 
             // 山田太郎：期限切れ更新対象
@@ -60,7 +60,7 @@ class ReadingPlanSeeder extends Seeder
                 'user_id' => $yamada->id,
                 'book_id' => $books['9784863940246']->id,
                 'target_date' => today()->subDay(),
-                'status' => ReadingPlanStatus::Pending,
+                'status' => ReadingPlanStatus::InProgress,
             ],
 
             // 山田太郎：通知対象外（未来）
@@ -68,7 +68,7 @@ class ReadingPlanSeeder extends Seeder
                 'user_id' => $yamada->id,
                 'book_id' => $books['9784101010021']->id,
                 'target_date' => today()->addDays(5),
-                'status' => ReadingPlanStatus::Pending,
+                'status' => ReadingPlanStatus::InProgress,
             ],
 
             // 山田太郎：読了済み
@@ -93,7 +93,7 @@ class ReadingPlanSeeder extends Seeder
                 'user_id' => $suzuki->id,
                 'book_id' => $books['9784478025819']->id,
                 'target_date' => today()->addDays(7),
-                'status' => ReadingPlanStatus::Pending,
+                'status' => ReadingPlanStatus::InProgress,
             ],
 
             // 鈴木花子：読了済み

@@ -29,7 +29,7 @@ class ReadingPlanDateTest extends TestCase
         $readingPlan = ReadingPlan::factory()->create([
             'user_id' => $user->id,
             'book_id' => $book->id,
-            'status' => ReadingPlanStatus::Pending,
+            'status' => ReadingPlanStatus::InProgress,
             'target_date' => '2026-08-25',
         ]);
 
@@ -43,7 +43,7 @@ class ReadingPlanDateTest extends TestCase
 
         // 現在の状態
         $response->assertSee(
-            ReadingPlanStatus::Pending->label()
+            ReadingPlanStatus::InProgress->label()
         );
 
         // 現在の期日
@@ -60,7 +60,7 @@ class ReadingPlanDateTest extends TestCase
             'target_date' => '2026-08-25',
         ]);
 
-        $newTargetDate = '2026-09-01';
+        $newTargetDate = today()->addDays(7)->toDateString();
 
         $response = $this->actingAs($user)
             ->put(route('reading-plans.update', $readingPlan), [
