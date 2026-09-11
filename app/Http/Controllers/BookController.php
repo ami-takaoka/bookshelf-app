@@ -52,7 +52,7 @@ class BookController extends Controller
      */
     public function store(BookRequest $request): RedirectResponse
     {
-        DB::transaction(function () use ($request): void {
+        $book = DB::transaction(function () use ($request): Book {
             $book = Book::create([
                 'user_id' => auth()->id(),
                 'title' => $request->title,
@@ -64,10 +64,12 @@ class BookController extends Controller
             ]);
 
             $book->genres()->sync($request->genres);
+
+            return $book;
         });
 
         return redirect()
-            ->route('books.index')
+            ->route('books.show', $book)
             ->with('success', '書籍を登録しました');
     }
 
