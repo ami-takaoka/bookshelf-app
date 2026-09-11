@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class IsbnSearchRequest extends FormRequest
 {
@@ -38,6 +40,19 @@ class IsbnSearchRequest extends FormRequest
             'isbn.required' => 'ISBNを入力してください。',
             'isbn.digits' => 'ISBNは13桁で入力してください。',
         ];
+    }
+
+    /**
+     * バリデーション失敗時にJSONレスポンスを返す。
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'message' => '入力内容に誤りがあります。',
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 
     /**

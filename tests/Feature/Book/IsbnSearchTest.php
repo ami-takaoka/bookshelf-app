@@ -69,7 +69,7 @@ class IsbnSearchTest extends TestCase
     }
 
     // ISBN-03
-    public function test_validation_error_is_displayed_when_isbn_is_not_13_digits(): void
+    public function test_validation_error_is_returned_when_isbn_is_not_13_digits(): void
     {
         $user = User::factory()->create();
 
@@ -78,9 +78,15 @@ class IsbnSearchTest extends TestCase
                 'isbn' => '123456789',
             ]));
 
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors([
-            'isbn' => 'ISBNは13桁で入力してください。',
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'message' => '入力内容に誤りがあります。',
+            'errors' => [
+                'isbn' => [
+                    'ISBNは13桁で入力してください。',
+                ],
+            ],
         ]);
     }
 
